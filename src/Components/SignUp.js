@@ -111,8 +111,6 @@ const SignUp = () => {
           data.password
         );
 
-        sendEmailVerification(res.user);
-
         const dataToStore = {
           userId: res.user.uid,
           username: data.username,
@@ -147,7 +145,7 @@ const SignUp = () => {
 
       if (state) {
         handleShowNotification(
-          "Đăng ký tài khoản thành công! Truy cập email để xác minh tài khoản.",
+          "Đăng ký tài khoản thành công!",
           "success"
         );
         navigate("/real+estate/signin");

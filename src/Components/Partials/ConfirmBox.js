@@ -26,7 +26,13 @@ const ConfirmBox = () => {
   const { showConfirmBox, setShowConfirmBox } = useContext(AppContext);
   const [handleShowNotification] = useNotification();
   const handleHiddenConfirmBox = () => {
-    setShowConfirmBox({ ...showConfirmBox, show: false });
+    console.log("Cancle");
+    setShowConfirmBox({
+      show: false,
+      content: "",
+      dataToDelete: null,
+      typeOfCollection: null,
+    });
   };
 
   const handleConfirmDeleting = async () => {
@@ -60,9 +66,12 @@ const ConfirmBox = () => {
     }
 
     if (showConfirmBox.typeOfCollection === "user_accounts") {
-      console.log(showConfirmBox.dataToDelete.photoURL);
-      const desertRef = ref(storage, showConfirmBox.dataToDelete.photoURL);
-      try {
+      console.log("Delete Account");
+      if (showConfirmBox.dataToDelete.photoName !== "") {
+        const desertRef = ref(
+          storage,
+          `userImages/${showConfirmBox.dataToDelete.photoName}`
+        );
         deleteObject(desertRef)
           .then(() => {
             console.log("File was deleted successfully.");
@@ -70,10 +79,32 @@ const ConfirmBox = () => {
           .catch((error) => {
             console.log("Deleting file is failed.");
           });
-        await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
+      }
+
+      if (showConfirmBox.dataToDelete.backgroundImageName !== "") {
+        const desertRef = ref(
+          storage,
+          `userImages/${showConfirmBox.dataToDelete.backgroundImageName}`
+        );
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("File was deleted successfully.");
+          })
+          .catch((error) => {
+            console.log("Deleting file is failed.");
+          });
+      }
+
+      console.log(showConfirmBox.dataToDelete.id);
+      try {
+        await deleteDoc(
+          doc(db, "user_accounts", showConfirmBox.dataToDelete.id)
+        );
         handleShowNotification("Xóa tài khoản người dùng thành công.");
       } catch (e) {
-        handleShowNotification("Xóa tài khoản người dùng thất bại do mạng không ổn định");
+        handleShowNotification(
+          "Xóa tài khoản người dùng thất bại do mạng không ổn định"
+        );
         console.log(e);
       }
     }
@@ -84,6 +115,8 @@ const ConfirmBox = () => {
       dataToDelete: null,
       typeOfCollection: null,
     });
+
+    window.location.reload();
   };
   return (
     <AnimatePresence initial={false}>

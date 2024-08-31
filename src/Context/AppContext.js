@@ -17,6 +17,9 @@ const AppProvider = ({ children }) => {
     dataToDelete: null,
     typeOfCollection: null,
   });
+
+  console.log(showConfirmBox);
+  
   const [houses, setHouses] = useState([]);
   const [lands, setLands] = useState([]);
   const [postsWasFiltered, setPostsWasFiltered] = useState([]);

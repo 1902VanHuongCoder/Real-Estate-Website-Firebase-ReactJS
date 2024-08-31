@@ -177,9 +177,9 @@ const Example = () => {
                 <FaTag />
               </span>
               <span className="font-medium">
-                {state?.stateOfProperty === 1 && "Bài đăng mới"}
-                {state?.stateOfProperty === 2 && "Đang thỏa thuận"}
-                {state?.stateOfProperty === 0 && "Đã hoàn thành giao dịch"}
+                {state?.stateOfProperty[0] === true &&  "Bài đăng mới"}
+                {state?.stateOfProperty[1] === true && "Đang thỏa thuận"}
+                {state?.stateOfProperty[2] === true && "Đã hoàn thành giao dịch"}
               </span>
             </p>
           </div>

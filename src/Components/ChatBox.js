@@ -63,6 +63,7 @@ const ChatBox = () => {
 
   const { dispatch } = useContext(ChatContext);
 
+  
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
     const combinedId =
@@ -72,6 +73,7 @@ const ChatBox = () => {
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       console.log(!res.exists());
+
       if (!res.exists()) {
         //create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
@@ -100,6 +102,7 @@ const ChatBox = () => {
     setUser(null);
     setUsername("");
   };
+
   const handleSearch = async () => {
     const q = query(
       collection(db, "user_accounts"),
@@ -168,34 +171,44 @@ const ChatBox = () => {
         }
       );
     } else if (text !== "") {
-      await updateDoc(doc(db, "chats", data.chatId), {
-        messages: arrayUnion({
-          id: uuid(),
-          text,
-          senderId: session.userId,
-          date: Timestamp.now(),
-        }),
+      try {
+        await updateDoc(doc(db, "chats", data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: session.userId,
+            date: Timestamp.now(),
+          }),
+        });
+      } catch (error) {
+        console.log("Update chat was failed!");
+      }
+    }
+    try {
+      await updateDoc(doc(db, "userChats", session.userId), {
+        [data.chatId + ".lastMessage"]: {
+          text: img ? "Hình ảnh" : text,
+        },
+        [data.chatId + ".date"]: serverTimestamp(),
       });
+    } catch (error) {
+      console.log("Update" + session.username + "was failed!");
     }
 
-    await updateDoc(doc(db, "userChats", session.userId), {
-      [data.chatId + ".lastMessage"]: {
-        text: img ? "Hình ảnh" : text,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-
-    await updateDoc(doc(db, "userChats", data.user.userId), {
-      [data.chatId + ".lastMessage"]: {
-        text: img ? "Hình ảnh" : text,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
+    try {
+      await updateDoc(doc(db, "userChats", data.user.userId), {
+        [data.chatId + ".lastMessage"]: {
+          text: img ? "Hình ảnh" : text,
+        },
+        [data.chatId + ".date"]: serverTimestamp(),
+      });
+    } catch (error) {
+      console.log("Update" + session.username + "was failed!");
+    }
 
     setText("");
     setImg(null);
   };
-
   const handleSendMessage = (e) => {
     e.key === "Enter" && handleSend();
   };
@@ -316,36 +329,37 @@ const ChatBox = () => {
 
           {/* Sidebar */}
           <div className="flex flex-col w-full overflow-auto">
-            { chats && Object.entries(chats)
-              ?.sort((a, b) => b[1].date - a[1].date)
-              .map((chat) => (
-                <div
-                  className={`w-full flex gap-2 items-center hover:bg-slate-200 rounded-sm cursor-pointer transition-all p-5 ${
-                    chat[0] === data.chatId && "bg-slate-200"
-                  }`}
-                  key={chat[0]}
-                  onClick={() => handleSelectChats(chat[1].userInfo)}
-                >
-                  <div className="w-[40px] h-[40px] overflow-hidden rounded-full">
-                    <img
-                      src={
-                        chat[1].userInfo.photoURL !== ""
-                          ? chat[1].userInfo.photoURL
-                          : user_icon
-                      }
-                      alt="user_avatar"
-                    />
+            {chats &&
+              Object.entries(chats)
+                ?.sort((a, b) => b[1].date - a[1].date)
+                .map((chat) => (
+                  <div
+                    className={`w-full flex gap-2 items-center hover:bg-slate-200 rounded-sm cursor-pointer transition-all p-5 ${
+                      chat[0] === data.chatId && "bg-slate-200"
+                    }`}
+                    key={chat[0]}
+                    onClick={() => handleSelectChats(chat[1].userInfo)}
+                  >
+                    <div className="w-[40px] h-[40px] overflow-hidden rounded-full">
+                      <img
+                        src={
+                          chat[1].userInfo.photoURL !== ""
+                            ? chat[1].userInfo.photoURL
+                            : user_icon
+                        }
+                        alt="user_avatar"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <span className="font-bold">
+                        {chat[1].userInfo.displayName}
+                      </span>
+                      <p className="w-full overflow-hidden max-h-[25px]">
+                        {chat[1].lastMessage?.text}
+                      </p>
+                    </div>
                   </div>
-                  <div className="w-full">
-                    <span className="font-bold">
-                      {chat[1].userInfo.displayName}
-                    </span>
-                    <p className="w-full overflow-hidden max-h-[25px]">
-                      {chat[1].lastMessage?.text}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
           </div>
         </div>
 

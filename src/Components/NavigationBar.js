@@ -82,7 +82,7 @@ const NavigationBar = () => {
                         : user_icon
                     }
                     alt="user_avatar"
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
               </div>

@@ -104,8 +104,6 @@ const Test = () => {
   });
 
   const handleUpdate = async (data) => {
-    console.log(data);
-
     const valuesThatNeedToUpdate = {};
 
     const getDataFields = getValues(); // get values of all of the input fields
@@ -145,6 +143,21 @@ const Test = () => {
       }
     }
 
+    let flag = 0;
+
+    for (let i = 0; i < listOfImageURLs.length; i++) {
+      for (let j = 0; j < listOfImageURLs.length; j++) {
+        if (listOfImageURLs[i] === listOfImageURLs[j]) {
+          flag += 1;
+        }
+      }
+    }
+
+ 
+    if (flag === listOfImageURLs.length) {
+      valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
+    }
+
     if (titleImageURL !== state.titleImageURL) {
       // check user whether user has changed title image
       valuesThatNeedToUpdate.titleImageURL = titleImageURL;
@@ -160,10 +173,15 @@ const Test = () => {
         });
     }
 
-    if (listOfImageURLs.length !== state.besideImageURLs.length) {
-      // check user whether user has changed list of beside images
-      valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
-    }
+    // console.log(listOfImageURLs.length !== state.besideImageURLs.length);
+
+    // if (listOfImageURLs.length !== state.besideImageURLs.length) {
+    //   // check user whether user has changed list of beside images
+
+    //   console.log("Length is different");
+
+    //   valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
+    // }
 
     let postsRef;
     if (isHouse) {
@@ -188,19 +206,16 @@ const Test = () => {
             date.getFullYear(),
         }); // update datas that have changed
         handleShowNotification("Cập nhật bài đăng thành công", "success");
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
       }
     } catch (error) {
       console.log("Update post failed!");
     }
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
 
-  const handleUpdate01 = () => {
-    alert("Hello");
-  };
   return (
     <Transitions>
       <div className="w-4/5 sm:p-5 mx-auto">
@@ -214,7 +229,7 @@ const Test = () => {
           className="w-full h-fit flex flex-col gap-y-3"
           action="/"
           method="POST"
-          onSubmit={handleSubmit(handleUpdate01)}
+          // onSubmit={handleSubmit(handleUpdate01)}
         >
           <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
             Nội dung chính
@@ -700,7 +715,7 @@ const Test = () => {
               type="submit"
               className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
             >
-              Đăng bài
+              Cập nhật
             </button>
           </div>
         </form>

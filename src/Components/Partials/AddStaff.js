@@ -144,6 +144,7 @@ const AddStaff = () => {
           position: data.position,
           dateOfBirth: data.dateOfBirth,
           registerMethod: "emailAndPassword",
+          revenue: 0,
         };
         await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
 
@@ -153,7 +154,7 @@ const AddStaff = () => {
       }
       if (state) {
         handleShowNotification(
-          "Đăng ký tài khoản thành công! Truy cập email để xác minh tài khoản.",
+          "Đăng ký tài khoản thành công!",
           "success"
         );
         navigate("/real+estate/signin");

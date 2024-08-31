@@ -43,16 +43,21 @@ const GeneralInfo = () => {
   }, []);
 
   const handleData = () => {
+
+    console.log("Handle data running...");
+
     const xAxis = [];
     const columnName = [];
     let totalRevenue = 0;
     userAccount.forEach((element) => {
       if (element.role === "staff") {
+        console.log(element.revenue);
         xAxis.push(element.revenue);
         columnName.push(element.username);
         totalRevenue += element.revenue;
       }
     });
+
 
     return { xAxis: xAxis, columnName: columnName, totalRevenue: totalRevenue };
   };
@@ -115,7 +120,7 @@ const GeneralInfo = () => {
           <div className="text-6xl p-4 flex justify-center items-center bg-green-500 my-4 text-white rounded-md">
             <span className="flex gap-x-4 items-end"> 
               {" "}
-              <span>{dataToDisplay.totalRevenue}</span>
+              <span>{parseInt(dataToDisplay?.totalRevenue)}</span>
               <span className="text-2xl">VNĐ</span>
             </span>
           </div>
@@ -128,8 +133,8 @@ const GeneralInfo = () => {
           </div>
           {userAccount && (
             <BarChart
-              data={dataToDisplay.xAxis}
-              columnName={dataToDisplay.columnName}
+              data={dataToDisplay?.xAxis}
+              columnName={dataToDisplay?.columnName}
             />
           )}
         </div>

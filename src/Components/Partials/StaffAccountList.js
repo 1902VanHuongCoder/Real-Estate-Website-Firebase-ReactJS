@@ -58,7 +58,7 @@ const StaffAccountsList = () => {
   }
 
   const handleToDeleteStaffAccount = async (element) => {
-    display("Bạn có chắc chắn muốn xóa nhân viên này?", element, "staffs");
+    display("Bạn có chắc chắn muốn xóa nhân viên này?", element, "user_accounts");
     window.scrollTo({
       top: 0,
       behavior: "smooth",

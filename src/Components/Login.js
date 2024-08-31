@@ -21,7 +21,6 @@ import Transitions from "./Partials/Transition";
 import { AppContext } from "../Context/AppContext";
 
 const Login = () => {
-
   const [handleShowNotification] = useNotification(); //custom hook
 
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +38,8 @@ const Login = () => {
   const auth = getAuth(app);
 
   const handleLogin = async (e) => {
+    console.log(auth.currentUser);
+
     e.preventDefault();
     setShowSpinner(true);
     const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
@@ -52,31 +53,6 @@ const Login = () => {
         if (doc.data().registerMethod === "emailAndPassword") {
           console.log("Sign up by email and password!");
           if (doc.data().password === md5(password)) {
-            if (auth.currentUser.emailVerified) {
-              handleShowNotification("Đăng nhập thành công!", "success");
-              localStorage.setItem(
-                "userInfo",
-                JSON.stringify({
-                  userId: doc.id,
-                })
-              );
-              const data = { ...doc.data(), id: doc.id };
-
-              setSession(data);
-
-              setShowCongratulation(true);
-            } else {
-              handleShowNotification(
-                "Email của bạn chưa được xác thực. Xác thực ngay!",
-                "error"
-              );
-            }
-          } else {
-            handleShowNotification("Sai mật khẩu", "error");
-          }
-        } else if (doc.data().registerMethod === "google") {
-          console.log("Sign up by google");
-          if (auth.currentUser.emailVerified) {
             handleShowNotification("Đăng nhập thành công!", "success");
             localStorage.setItem(
               "userInfo",
@@ -90,11 +66,21 @@ const Login = () => {
 
             setShowCongratulation(true);
           } else {
-            handleShowNotification(
-              "Email của bạn chưa được xác thực. Xác thực ngay!",
-              "error"
-            );
+            handleShowNotification("Sai mật khẩu", "error");
           }
+        } else if (doc.data().registerMethod === "google") {
+          handleShowNotification("Đăng nhập thành công!", "success");
+          localStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              userId: doc.id,
+            })
+          );
+          const data = { ...doc.data(), id: doc.id };
+
+          setSession(data);
+
+          setShowCongratulation(true);
         }
       });
     }
@@ -109,7 +95,7 @@ const Login = () => {
     } else if (userInfo && session && session.role === "admin") {
       navigate("/admin/list+of+posts");
     } else if (userInfo && session && session.role === "staff") {
-      navigate("/staff/dashboard");
+      navigate("/staff/list+posts+of+staff");
     }
   }, [userInfo, session]);
 
