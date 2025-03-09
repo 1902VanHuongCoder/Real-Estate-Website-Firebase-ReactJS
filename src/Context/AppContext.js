@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
+import { fetchUserData } from "../firebase-helpers";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../FirebaseConfig/firebase";
 export const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const [sideBarOpen, setSideBarOpen] = useState(false); // state to store and control sidebar
@@ -18,12 +21,10 @@ const AppProvider = ({ children }) => {
     typeOfCollection: null,
   });
 
-  console.log(showConfirmBox);
-  
   const [houses, setHouses] = useState([]);
   const [lands, setLands] = useState([]);
   const [postsWasFiltered, setPostsWasFiltered] = useState([]);
-  
+
   useEffect(() => {
     if (showNotification) {
       setTimeout(() => {

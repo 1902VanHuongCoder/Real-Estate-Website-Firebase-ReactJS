@@ -1,5 +1,5 @@
 // 🚀 Importing necessary modules and components
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
@@ -44,9 +44,11 @@ import {
   Sidebar,
   ImageContainer,
 } from "./Components/Middle";
+import { fetchUserData } from "./firebase-helpers";
 
 // 🏷️ Main App component
 function App() {
+  const navigate = useNavigate();
   const location = useLocation();
   const {
     session,
@@ -58,6 +60,11 @@ function App() {
     setHouses,
     setLands,
   } = useContext(AppContext);
+
+  const hideNavAndToTop =
+    location.pathname === "/real+estate/signup" ||
+    location.pathname === "/real+estate/signin";
+  // ⏳ useEffect to fetch data on component mount
 
   // 📥 Fetch house data from Firestore
   const fetchHouseDatas = async () => {
@@ -82,7 +89,6 @@ function App() {
         setLands(dataResponsed);
         initialPostWasFiltered = initialPostWasFiltered.concat(dataResponsed);
       });
-
       setPostsWasFiltered(initialPostWasFiltered);
     } catch (error) {
       console.log("Error when fetching house datas");
@@ -91,35 +97,34 @@ function App() {
     setShowSpinner(false);
   };
 
-  // 📥 Fetch user data from Firestore
-  const fetchUserData = async (id) => {
+  const fetchUserData = async (userId) => {
     try {
-      const docRef = doc(db, "user_accounts", id);
+      const docRef = doc(db, "user_accounts", userId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setSession(docSnap.data());
       } else {
         console.log("No such document!");
+        return;
       }
     } catch (error) {
       console.log(error); // display error messages in console panel
+      return;
     }
   };
 
-  // ⏳ useEffect to fetch data on component mount
   useEffect(() => {
     fetchHouseDatas();
     const userInfo = localStorage.getItem("userInfo"); // get user data from local storage
 
     if (userInfo) {
       let userId = JSON.parse(userInfo).userId; // parse JSON to Object
-      fetchUserData(userId); // fetch user datas from database
+      fetchUserData(userId);
+    } else {
+      setSession(null);
+      navigate("/real+estate/signin");
     }
   }, []);
-
-  const hideNavAndToTop =
-    location.pathname === "/real+estate/signup" ||
-    location.pathname === "/real+estate/signin";
 
   return (
     <div className="relative font-roboto max-w-screen overflow-hidden">
@@ -129,9 +134,9 @@ function App() {
       <Congratulation />
       <div className="relative max-w-screen min-h-screen mx-auto overflow-hidden">
         {!hideNavAndToTop && <NavigationBar />}
-        <Notification />
-        {session && session.role === "admin" && <AdminDashboard />}
-        {session && session.role === "staff" && <StaffDashboard />}
+        {/* <Notification /> */}
+        {/* {session && session.role === "admin" && <AdminDashboard />} */}
+        {/* {session && session.role === "staff" && <StaffDashboard />} */}
         <div onClick={() => setOpenUserBox(false)}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -149,14 +154,12 @@ function App() {
                 element={<UpdateProfile />}
               ></Route>
 
-
-
-
               <Route
                 path="/real+estate/search+result/*"
                 element={<OptionResults />}
               ></Route>
 
+              {/* 
               <Route path="/real+estate/post" element={<Post />}></Route>
               <Route
                 path="/admin/list+of+posts"
@@ -182,7 +185,7 @@ function App() {
                 path="/admin/list+of+staff+accounts"
                 element={<StaffAccountsList />}
               ></Route>
-              <Route path="/test" element={<Test />}></Route>
+              <Route path="/test" element={<Test />}></Route> */}
             </Routes>
           </AnimatePresence>
         </div>

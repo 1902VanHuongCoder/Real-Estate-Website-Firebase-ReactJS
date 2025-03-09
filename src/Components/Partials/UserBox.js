@@ -79,7 +79,7 @@ const UserBox = () => {
                 : defaultUserAvatar
             })`,
           }}
-          className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
+          className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-[#CC8C08]"
         ></div>
         <div className="self-end flex flex-col gap-y-1">
           <p className="text-2xl font-medium">

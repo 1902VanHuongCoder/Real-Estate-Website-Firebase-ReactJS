@@ -18,6 +18,7 @@ import { NavItems } from "./Middle";
 import { rentItems, saleItems } from "../datas/navdatas";
 
 import logo from "../images/logo.png";
+import { Link } from "react-router-dom";
 // 🎨 Create variants to create animation for sidebar
 const toggleMenu = {
   open: {
@@ -68,13 +69,16 @@ const Sidebar = () => {
       className="w-full fixed top-0 left-0 px-4 py-5 bg-[#CC8C08] h-screen z-50 overflow-y-scroll"
     >
       <div className="flex justify-between  border-b-[1px] border-b-solid border-b-white pb-5">
-        <span className="w-[60px] h-[60px] rounded-full overflow-hidden">
-          <img
-            src={logo}
-            alt="logo"
-            className="mr-3 w-full h-full object-cover"
-          />
-        </span>
+        <Link to="/">
+          <span className="w-[60px] h-[60px] rounded-full overflow-hidden">
+            <img
+              src={logo}
+              alt="logo"
+              className="mr-3 w-full h-full object-cover"
+            />
+          </span>
+        </Link>
+
         <button
           onClick={() => setSideBarOpen(!sideBarOpen)}
           className="text-white text-xl border-[2px] border-solid border-white flex justify-center items-center w-[60px] h-[60px] rounded-full"

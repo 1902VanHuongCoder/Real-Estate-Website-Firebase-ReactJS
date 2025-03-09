@@ -147,3 +147,20 @@ export const sendMessage = async (text, img, data, session) => {
     console.log("Update" + session.username + "was failed!");
   }
 };
+
+export const fetchUserData = async (id) => {
+  try {
+    const docRef = doc(db, "user_accounts", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      return userData;
+    } else {
+      console.log("No such document!");
+      return;
+    }
+  } catch (error) {
+    console.log(error); // display error messages in console panel
+    return;
+  }
+};

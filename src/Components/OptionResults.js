@@ -1,7 +1,7 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext } from "react";
 
-// import icons
+// 📦 Import icons
 import {
   FaBuilding,
   FaLocationDot,
@@ -14,9 +14,10 @@ import { PiToiletFill } from "react-icons/pi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 
-// import images
+// 📷 Import images
 import label from "../images/label.png";
 
+// 🏷️ OptionResults component
 const OptionResults = () => {
   const { setRealEstateDetail, news } = useContext(AppContext);
   const { state } = useLocation();
@@ -24,6 +25,7 @@ const OptionResults = () => {
   const queryResult = [];
   const keyWordsArray = state.split(" ");
 
+  // 📝 Filter news based on keywords
   for (let j = 0; j < news.length; j++) {
     const typeOfPropertyLowerCase = news[j].typeOfProperty.toLowerCase();
     const keyWord = state.substring(4).toLowerCase();
@@ -42,6 +44,7 @@ const OptionResults = () => {
     }
   }
 
+  // 📝 Handle view details
   const handleViewDetails = (postData) => {
     setRealEstateDetail(postData);
     navigate("/details");
@@ -50,18 +53,18 @@ const OptionResults = () => {
 
   return (
     <div className="w-full h-fit p-5">
-      <h1 className="pl-4 text-xl font-medium uppercase border-l-[5px] border-l-solid border-l-[#0B60B0]">
-        TỪ KHÓA TÌM KIẾM "{state}"
+      <h1 className="pl-4 text-xl font-medium border-l-[5px] border-l-solid border-l-[#CC8C08]">
+        Kết quả tìm kiếm cho cho từ khóa "{state}"
       </h1>
       {queryResult.length > 0 ? (
         <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
           {queryResult.map((element, index) => (
             <div
               key={index}
-              className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit"
+              className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit rounded-md"
             >
               <div
-                className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
+                className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat rounded-t-md"
                 style={{
                   backgroundImage: `url("${element.titleImageURL.imageURL}")`,
                 }}
@@ -142,7 +145,7 @@ const OptionResults = () => {
                 <div>Đã được đăng vào ngày: {element.createdAt}</div>
                 <button
                   onClick={() => handleViewDetails(element)}
-                  className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white"
+                  className="w-[100px] h-[40px] border-[2px] border-solid border-[#CC8C08] hover:bg-[#CC8C08] hover:text-white rounded-md"
                 >
                   Chi tiết
                 </button>
@@ -151,7 +154,7 @@ const OptionResults = () => {
           ))}
         </div>
       ) : (
-        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[400px] text-[20px]">
+        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[600px] text-lg">
           Không có kết quả phù hợp
         </div>
       )}
