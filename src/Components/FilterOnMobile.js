@@ -1,15 +1,19 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext } from "react";
 
-// import icons
+// 🌐 Import contexts
 import { AppContext } from "../Context/AppContext";
+
+// 🏷️ FilterOnMobile component
 const FilterOnMobile = () => {
   const { setPostsWasFiltered, setShowSpinner, news } = useContext(AppContext);
 
+  // 📝 Check if value is in range
   const isInRange = (value, min, max) => {
     return value >= min && value <= max;
   };
 
+  // 📝 Handle filter posts based on acreage
   const handleFilterPostsBasedOnAcreage = (value) => {
     setShowSpinner(true);
     const rangeOfValues = value.split("-");
@@ -28,6 +32,7 @@ const FilterOnMobile = () => {
     }, 2000);
   };
 
+  // 📝 Handle show all posts
   const handleShowAllOfPosts = () => {
     setShowSpinner(true);
     setTimeout(() => {
@@ -36,50 +41,52 @@ const FilterOnMobile = () => {
     }, 1500);
   };
 
+  // 📝 Handle filter posts based on direction
   const handleFilterPostsBasedOnDirection = (direction) => {
     setShowSpinner(true);
     setTimeout(() => {
-      const postsWereFilteredBasedOnAcreage = [];
+      const postsWereFilteredBasedOnDirection = [];
       news.forEach((element) => {
         if (direction.toLowerCase() === element.direction.toLowerCase()) {
-          postsWereFilteredBasedOnAcreage.push(element);
+          postsWereFilteredBasedOnDirection.push(element);
         }
       });
-      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setPostsWasFiltered(postsWereFilteredBasedOnDirection);
       setShowSpinner(false);
     }, 1500);
   };
 
+  // 📝 Handle filter posts based on floor
   const handleFilterPostsBasedOnFloor = (floor) => {
     setShowSpinner(true);
     let fl = parseInt(floor);
     setTimeout(() => {
-      const postsWereFilteredBasedOnAcreage = [];
+      const postsWereFilteredBasedOnFloor = [];
       news.forEach((element) => {
         if (fl === element.floors) {
-          postsWereFilteredBasedOnAcreage.push(element);
+          postsWereFilteredBasedOnFloor.push(element);
         }
 
         if (fl >= 7) {
           if (element.floors >= 7) {
-            postsWereFilteredBasedOnAcreage.push(element);
+            postsWereFilteredBasedOnFloor.push(element);
           }
         }
       });
-      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setPostsWasFiltered(postsWereFilteredBasedOnFloor);
       setShowSpinner(false);
     }, 1500);
   };
 
   return (
-    <div className="block sm:hidden w-full pt-10 px-5">
-      <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">
+    <div className="block sm:hidden w-full pt-10">
+      <h2 className="text-lg border-l-[6px] border-l-solid border-l-[#CC8C08] pl-3">
         Tìm kiếm
       </h2>
-      <div className="mt-5 mb-5 grid grid-cols-2 items-center gap-2 w-full h-fit">
+      <div className="mt-5 mb-5 grid grid-cols-2 items-center gap-2 w-full h-fit text-md">
         <select
           onChange={(e) => handleFilterPostsBasedOnAcreage(e.target.value)}
-          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#0B60B0]"
+          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#CC8C08]"
         >
           <option value="">Diện tích</option>
           <option value="1-40">Dưới 40 m2</option>
@@ -89,7 +96,7 @@ const FilterOnMobile = () => {
         </select>
         <select
           onChange={(e) => handleFilterPostsBasedOnDirection(e.target.value)}
-          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#0B60B0]"
+          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#CC8C08]"
         >
           <option value="">Hướng nhà</option>
           <option value="Đông">Đông</option>
@@ -103,7 +110,7 @@ const FilterOnMobile = () => {
         </select>
         <select
           onChange={(e) => handleFilterPostsBasedOnFloor(e.target.value)}
-          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#0B60B0]"
+          className="h-[40px] p-1 border-[1px] border-solid border-slate-200 focus:outline-none focus:border-[2px] focus:border-solid focus:border-[#CC8C08]"
         >
           <option value="">Số tầng</option>
           <option value={1}>1</option>
@@ -117,7 +124,7 @@ const FilterOnMobile = () => {
       </div>
       <button
         onClick={handleShowAllOfPosts}
-        className="px-5 h-[40px] bg-[#0B60B0] text-white text-xl hover:opacity-80"
+        className="px-5 h-[40px] bg-[#CC8C08] rounded-md text-white text-lg hover:opacity-80"
       >
         Tất cả bài đăng
       </button>

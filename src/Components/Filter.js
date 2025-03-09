@@ -1,18 +1,23 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext } from "react";
 
-// import icons
+// 📦 Import icons
 import { GoDotFill } from "react-icons/go";
+
+// 🌐 Import contexts
 import { AppContext } from "../Context/AppContext";
 
-const Example = () => {
+// 🏷️ Filter component
+const Filter = () => {
   const { setPostsWasFiltered, setShowSpinner, houses, lands } =
     useContext(AppContext);
 
+  // 📝 Check if value is in range
   const isInRange = (value, min, max) => {
     return value >= min && value <= max;
   };
 
+  // 📝 Handle filter posts based on acreage
   const handleFilterPostsBasedOnAcreage = (min, max) => {
     setShowSpinner(true);
     const news = [...houses, ...lands];
@@ -28,6 +33,7 @@ const Example = () => {
     }, 2000);
   };
 
+  // 📝 Handle show all posts
   const handleShowAllOfPosts = () => {
     setShowSpinner(true);
     const news = [...houses, ...lands];
@@ -37,50 +43,52 @@ const Example = () => {
     }, 1500);
   };
 
+  // 📝 Handle filter posts based on direction
   const handleFilterPostsBasedOnDirection = (direction) => {
     setShowSpinner(true);
     const news = [...houses, ...lands];
     setTimeout(() => {
-      const postsWereFilteredBasedOnAcreage = [];
+      const postsWereFilteredBasedOnDirection = [];
       news.forEach((element) => {
         if (direction === element.direction) {
-          postsWereFilteredBasedOnAcreage.push(element);
+          postsWereFilteredBasedOnDirection.push(element);
         }
       });
-      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setPostsWasFiltered(postsWereFilteredBasedOnDirection);
       setShowSpinner(false);
     }, 1500);
   };
 
+  // 📝 Handle filter posts based on floor
   const handleFilterPostsBasedOnFloor = (floor) => {
     setShowSpinner(true);
     const news = [...houses, ...lands];
     setTimeout(() => {
-      const postsWereFilteredBasedOnAcreage = [];
+      const postsWereFilteredBasedOnFloor = [];
       news.forEach((element) => {
         if (floor === element.floors) {
-          postsWereFilteredBasedOnAcreage.push(element);
+          postsWereFilteredBasedOnFloor.push(element);
         }
 
         if (floor >= 7) {
           if (element.floors >= 7) {
-            postsWereFilteredBasedOnAcreage.push(element);
+            postsWereFilteredBasedOnFloor.push(element);
           }
         }
       });
-      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setPostsWasFiltered(postsWereFilteredBasedOnFloor);
       setShowSpinner(false);
     }, 1500);
   };
 
   return (
     <div className="hidden sm:block basis-[30%] h-fit w-full pt-14">
-      <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">
+      <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#CC8C08] pl-3">
         Tìm kiếm
       </h2>
       <div
         onClick={handleShowAllOfPosts}
-        className="w-full flex items-center gap-x-1 font-medium bg-[#0B60B0] text-white h-fit mt-5 p-5 border-[1px] border-solid border-slate-200"
+        className="w-full flex items-center gap-x-1 font-medium bg-[#CC8C08] text-white h-fit mt-5 p-5 border-[1px] border-solid border-slate-200 cursor-pointer"
       >
         <span>
           <GoDotFill />
@@ -94,7 +102,6 @@ const Example = () => {
           <span>
             <GoDotFill />
           </span>
-
           <span className="text-xl font-medium">Diện tích</span>
         </p>
         <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
@@ -254,4 +261,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default Filter;

@@ -1,16 +1,42 @@
-import { Route, Routes } from "react-router-dom";
-import Post from "./Components/Post";
-import Home from "./Home";
-import Details from "./Details";
-import UpdateProfile from "./Components/UpdateProfile";
-import AdminDashboard from "./Components/AdminDashboard";
-import Login from "./Components/Login";
-import SignUp from "./Components/SignUp";
-import OptionResults from "./Components/OptionResults";
-import Profile from "./Components/Profile";
-import Notification from "./Components/Partials/Notification";
+// 🚀 Importing necessary modules and components
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "./FirebaseConfig/firebase";
 
-import "./App.css";
+// 🏠 Importing components
+import {
+  Post,
+  Home,
+  Details,
+  UpdateProfile,
+  AdminDashboard,
+  Login,
+  SignUp,
+  OptionResults,
+  Profile,
+  Notification,
+  Loading,
+  Congratulation,
+  AccountList,
+  FeedbackList,
+  ConfirmBox,
+  AddStaff,
+  StaffDashboard,
+  ChatBox,
+  GeneralInfo,
+  UpdatePost,
+  ListOfPosts,
+  Test,
+  StaffAccountsList,
+  StaffPost,
+} from "./helpers";
+
+// 🌐 Importing context
+import { AppContext } from "./Context/AppContext";
+
+// 📦 Importing additional components
 import {
   ToTop,
   NavigationBar,
@@ -19,31 +45,7 @@ import {
   ImageContainer,
 } from "./Components/Middle";
 
-import { useLocation } from "react-router-dom";
-
-// import context
-import { AnimatePresence } from "framer-motion";
-import { useContext, useEffect } from "react";
-import { AppContext } from "./Context/AppContext";
-import Loading from "./Components/Partials/Loading";
-import Congratulation from "./Congratulation";
-import AccountList from "./Components/Partials/AccountList";
-import FeedbackList from "./Components/Partials/FeebacksList";
-import ConfirmBox from "./Components/Partials/ConfirmBox";
-
-//import firebase services
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "./FirebaseConfig/firebase";
-import AddStaff from "./Components/Partials/AddStaff";
-import StaffDashboard from "./StaffDashboard";
-import ChatBox from "./Components/ChatBox";
-import GeneralInfo from "./Components/GeneralInfo";
-import UpdatePost from "./Components/UpdatePost";
-import ListOfPosts from "./Components/Partials/ListOfPosts";
-import Test from "./Test";
-import StaffAccountsList from "./Components/Partials/StaffAccountList";
-import StaffPost from "./Components/StaffPost";
-
+// 🏷️ Main App component
 function App() {
   const location = useLocation();
   const {
@@ -57,6 +59,7 @@ function App() {
     setLands,
   } = useContext(AppContext);
 
+  // 📥 Fetch house data from Firestore
   const fetchHouseDatas = async () => {
     setShowSpinner(true);
     let initialPostWasFiltered;
@@ -88,6 +91,7 @@ function App() {
     setShowSpinner(false);
   };
 
+  // 📥 Fetch user data from Firestore
   const fetchUserData = async (id) => {
     try {
       const docRef = doc(db, "user_accounts", id);
@@ -95,7 +99,6 @@ function App() {
       if (docSnap.exists()) {
         setSession(docSnap.data());
       } else {
-        // docSnap.data() will be undefined in this case
         console.log("No such document!");
       }
     } catch (error) {
@@ -103,26 +106,29 @@ function App() {
     }
   };
 
+  // ⏳ useEffect to fetch data on component mount
   useEffect(() => {
     fetchHouseDatas();
-    // fetchLandDatas();
     const userInfo = localStorage.getItem("userInfo"); // get user data from local storage
 
     if (userInfo) {
       let userId = JSON.parse(userInfo).userId; // parse JSON to Object
-      // if user has logged in
       fetchUserData(userId); // fetch user datas from database
     }
   }, []);
 
+  const hideNavAndToTop =
+    location.pathname === "/real+estate/signup" ||
+    location.pathname === "/real+estate/signin";
+
   return (
-    <div className="relative">
+    <div className="relative font-roboto max-w-screen overflow-hidden">
       <Loading />
       {showImage && <ImageContainer />}
       <ConfirmBox />
       <Congratulation />
-      <div className="relative max-w-[1200px] mx-auto overflow-hidden">
-        <NavigationBar />
+      <div className="relative max-w-screen min-h-screen mx-auto overflow-hidden">
+        {!hideNavAndToTop && <NavigationBar />}
         <Notification />
         {session && session.role === "admin" && <AdminDashboard />}
         {session && session.role === "staff" && <StaffDashboard />}
@@ -130,74 +136,58 @@ function App() {
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route index path="/" element={<Home />}></Route>
-
               <Route path="/real+estate/signup" element={<SignUp />}></Route>
-
               <Route path="/real+estate/signin" element={<Login />}></Route>
+              <Route path="/details" element={<Details />}></Route>
+              {session && <Route path="/chat" element={<ChatBox />}></Route>}
+              <Route
+                path="/real+estate/your+profile"
+                element={<Profile />}
+              ></Route>
+              <Route
+                path="/real+estate/update+profile"
+                element={<UpdateProfile />}
+              ></Route>
+
+
+
 
               <Route
                 path="/real+estate/search+result/*"
                 element={<OptionResults />}
               ></Route>
 
-              <Route path="/details" element={<Details />}></Route>
-
-              <Route
-                path="/real+estate/your+profile"
-                element={<Profile />}
-              ></Route>
-
-              <Route
-                path="/real+estate/update+profile"
-                element={<UpdateProfile />}
-              ></Route>
-
               <Route path="/real+estate/post" element={<Post />}></Route>
-
               <Route
                 path="/admin/list+of+posts"
                 element={<ListOfPosts />}
               ></Route>
-
               <Route
                 path="/admin/list+of+user+accounts"
                 element={<AccountList />}
               ></Route>
-
               <Route
                 path="/admin/list+of+feedbacks"
                 element={<FeedbackList />}
               ></Route>
-
               <Route path="/admin/add+staff" element={<AddStaff />}></Route>
-
               <Route path="/admin" element={<GeneralInfo />}></Route>
-
               <Route
                 path="/staff/list+posts+of+staff"
                 element={<StaffPost />}
               ></Route>
 
-              {session && <Route path="/chat" element={<ChatBox />}></Route>}
               <Route path="/staff/update+post" element={<UpdatePost />}></Route>
               <Route
                 path="/admin/list+of+staff+accounts"
                 element={<StaffAccountsList />}
               ></Route>
-
-              {/* Beta  */}
-
               <Route path="/test" element={<Test />}></Route>
-
-              {/* {session && <Route path="/test" element={<Test />}></Route>} */}
             </Routes>
           </AnimatePresence>
         </div>
-
-        <ToTop />
-
+        {/* {!hideNavAndToTop && <ToTop />} */}
         {session && session.role === "user" && <Footer />}
-
         <Sidebar />
       </div>
     </div>

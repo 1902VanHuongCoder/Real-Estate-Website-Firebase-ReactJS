@@ -1,25 +1,25 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useEffect, useState } from "react";
 import { useNotification } from "../Hooks/useNotification";
 
-// import icons
+// 📦 Import icons
 import { LuPencilLine } from "react-icons/lu";
 import { FaCamera } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 
-// import packages
+// 📦 Import packages
 import { useForm } from "react-hook-form";
 import Transitions from "./Partials/Transition";
 
-//import images
+// 📷 Import images
 import defaultBackground from "../images/buiding.jpg";
 import defaultAvatar from "../images/user_icon.png";
 import flagIcon from "../images/vn_flag_icon.png";
 
-// import context
+// 🌐 Import contexts
 import { AppContext } from "../Context/AppContext";
 
-//import firebase service
+// 🔥 Import Firebase services
 import { db, storage } from "../FirebaseConfig/firebase";
 import {
   deleteObject,
@@ -36,6 +36,7 @@ import {
   where,
 } from "firebase/firestore";
 
+// 🏷️ UpdateProfile component
 const UpdateProfile = () => {
   const [background, setBackground] = useState({
     localURL: null,
@@ -61,7 +62,7 @@ const UpdateProfile = () => {
     formState: { errors },
   } = useForm();
 
-  // handle to preview background image when user upload their image
+  // 📝 Handle to preview background image when user uploads their image
   const handleUploadBackground = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
@@ -70,7 +71,7 @@ const UpdateProfile = () => {
     return;
   };
 
-  // handle to preview user avatar when user upload their avatar
+  // 📝 Handle to preview user avatar when user uploads their avatar
   const handleUploadUserAvatar = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
@@ -79,19 +80,21 @@ const UpdateProfile = () => {
     return;
   };
 
+  // 📝 Update session
   const updateSession = async (userId) => {
     const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
     const q = query(userAccountRef, where("userId", "==", userId)); // query whether this email had existed in database
-    const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+    const result = await getDocs(q); // the query command will return a document list that equal to email
     result.docs.forEach((doc) => {
       const data = { ...doc.data(), id: doc.id };
       setSession(data);
     });
     console.log("Update session is successful");
   };
-  // update user's datas
+
+  // 📝 Update user's data
   const handleUpdateUserProfile = async (data) => {
-    // setShowSpinner(true);
+    setShowSpinner(true);
     const userId = localStorage.getItem("userInfo");
     const profileRef = doc(db, "user_accounts", JSON.parse(userId).userId);
     const valuesThatNeedToUpdate = {};
@@ -105,8 +108,6 @@ const UpdateProfile = () => {
     });
 
     if (background.details) {
-      console.log(session?.backgroundURL);
-
       if (session?.backgroundURL !== "") {
         const desertRef = ref(
           storage,
@@ -115,19 +116,18 @@ const UpdateProfile = () => {
         // Delete the file
         deleteObject(desertRef)
           .then(() => {
-            console.log("background image File was deleted successfully.");
+            console.log("Background image file was deleted successfully.");
           })
           .catch((error) => {
-            console.log("Deleting background image file is failed.");
+            console.log("Deleting background image file failed.");
           });
       }
 
-      console.log("1 run");
       const storageRef = ref(storage, `userImages/${background.details.name}`);
       const uploadTask = uploadBytesResumable(storageRef, background.details);
 
       uploadTask.on(
-        //keep tracking upload process to display nescessary informations
+        // keep tracking upload process to display necessary information
         "state_changed",
         (snapshot) => {
           // return percent of completed upload
@@ -158,7 +158,7 @@ const UpdateProfile = () => {
             console.log("File was deleted successfully.");
           })
           .catch((error) => {
-            console.log("Deleting file is failed.");
+            console.log("Deleting file failed.");
           });
       }
 
@@ -166,7 +166,7 @@ const UpdateProfile = () => {
       const uploadTask = uploadBytesResumable(storageRef, userAvatar.details);
 
       uploadTask.on(
-        //keep tracking upload process to display nescessary informations
+        // keep tracking upload process to display necessary information
         "state_changed",
         (snapshot) => {
           // return percent of completed upload
@@ -199,33 +199,32 @@ const UpdateProfile = () => {
             (date.getMonth() + 1) +
             "/" +
             date.getFullYear(),
-        }); // update datas that have changed
+        }); // update data that have changed
         handleShowNotification("Cập nhật bài đăng thành công", "success");
         setSession({ ...session, ...valuesThatNeedToUpdate });
       }
     } catch (error) {
-      console.log("Update profile was failed!");
+      console.log("Update profile failed!");
     }
 
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+    setShowSpinner(false);
   };
+
+  // 📝 Redirect to sign-in if no user info
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (!userInfo) {
       window.location.href = "/real+estate/signin";
     }
   }, []);
+
   return (
     <Transitions>
       <div className="w-full h-fit">
-        <h1 className="w-full text-center text-xl sm:text-4xl font-md pt-10 mb-10">
-          <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-            CẬP NHẬT THÔNG TIN
-          </span>
-        </h1>
         <form
           action="/"
           method="POST"
@@ -233,7 +232,7 @@ const UpdateProfile = () => {
           className="w-full"
         >
           <div
-            className="relative w-full h-[650px] bg-cover bg-center bg-no-repeat"
+            className="relative w-full h-[300px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${
                 background.localURL
@@ -246,7 +245,7 @@ const UpdateProfile = () => {
           >
             <label
               htmlFor="background"
-              className="absolute top-5 sm:top-[87%] right-5 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80"
+              className="absolute top-5 sm:top-[80%] right-4 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80 rounded-md cursor-pointer"
             >
               <span>Cập nhật ảnh nền</span>
               <span>
@@ -262,7 +261,7 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="relative w-full h-fit pt-14 sm:pt-10 lg:pt-0">
-            {/* user avatar  */}
+            {/* User avatar */}
             <div className="absolute left-[50%] sm:left-10 -translate-x-[50%] sm:-translate-x-[0%] -top-[75px] h-fit flex items-center gap-x-2">
               <div
                 style={{
@@ -295,12 +294,15 @@ const UpdateProfile = () => {
             </div>
 
             <div className="w-full sm:w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
+              <p className="text-lg sm:uppercase">Cập nhật thông tin</p>
               <div className="flex flex-col gap-y-1">
-                <label htmlFor="username">Họ và tên</label>
+                <label className="text-slate-500 opacity-80" htmlFor="username">
+                  Họ và tên
+                </label>
                 <input
                   className={`${
                     errors.username ? "border-red-500" : "border-slate-400"
-                  } w-full h-[50px] outline-none border-[1px] border-solid pl-3`}
+                  } w-full h-[50px] outline-none border-[1px] border-solid pl-3 rounded-md focus:border-[#CC8C08]`}
                   type="text"
                   id="username"
                   name="username"
@@ -319,11 +321,13 @@ const UpdateProfile = () => {
                 )}
               </div>
               <div className="flex flex-col gap-y-1">
-                <label htmlFor="address">Địa chỉ</label>
+                <label className="text-slate-500 opacity-80" htmlFor="address">
+                  Địa chỉ
+                </label>
                 <input
                   className={`${
                     errors.address ? "border-red-500" : "border-slate-400"
-                  } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
+                  } w-full h-[50px] outline-none border-[1px] border-solid pl-3 rounded-md focus:border-[#CC8C08]`}
                   type="text"
                   id="address"
                   name="address"
@@ -344,11 +348,14 @@ const UpdateProfile = () => {
                 )}
               </div>
               <div className="flex flex-col gap-y-2">
-                <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
+                <label
+                  className="text-slate-500 opacity-80"
+                  htmlFor="phoneNumber"
+                >
                   Số điện thoại
                 </label>
                 <div className="relative w-full h-fit">
-                  <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
+                  <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200 rounded-tl-md rounded-bl-md">
                     <span className="w-[40px] h-[30px] bg-cover bg-center">
                       <img
                         className="w-full h-full"
@@ -361,7 +368,7 @@ const UpdateProfile = () => {
                   <input
                     className={`${
                       errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                    } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                     id="phoneNumber"
                     name="phoneNumber"
                     type="text"
@@ -385,11 +392,13 @@ const UpdateProfile = () => {
 
               {session?.role === "staff" && (
                 <div className="flex flex-col gap-y-1">
-                  <label htmlFor="position">Chức vụ</label>
+                  <label className="opacity-80" htmlFor="position">
+                    Chức vụ
+                  </label>
                   <input
                     className={`${
                       errors.position ? "border-red-500" : "border-slate-400"
-                    } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
+                    } w-full h-[50px] outline-none border-[1px] border-solid pl-3 rounded-md`}
                     type="text"
                     id="position"
                     name="position"
@@ -414,7 +423,7 @@ const UpdateProfile = () => {
               <div className="mt-5 flex justify-end">
                 <button
                   type="submit"
-                  className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
+                  className="text-white bg-[#CC8C08] h-[40px] px-5 hover:opacity-80 rounded-md"
                 >
                   Cập nhật
                 </button>

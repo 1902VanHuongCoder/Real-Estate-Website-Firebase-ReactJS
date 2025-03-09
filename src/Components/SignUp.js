@@ -1,63 +1,54 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useState } from "react";
 import { useNotification } from "../Hooks/useNotification";
-// import packages
+
+// 📦 Import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoIosWarning } from "react-icons/io";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-// import icons
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-
-// import firebase services
+// 🔥 Import firebase services
 import {
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
 } from "firebase/auth";
 import { db, app } from "../FirebaseConfig/firebase";
-
 import {
-  addDoc,
   collection,
   doc,
   getDocs,
   query,
-  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
 
-//import context
+// 🌐 Import context
 import { AppContext } from "../Context/AppContext";
 
-//import library
+// 📦 Import libraries
 import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 import Transitions from "./Partials/Transition";
 
-//import images
+// 📷 Import images
 import flagIcon from "../images/vn_flag_icon.png";
 import googleIcon from "../images/google_logo.png";
-// import component
+
+// 🏷️ SignUp component
 const SignUp = () => {
   const auth = getAuth(app);
-
   const { setSession, setShowSpinner, setShowCongratulation } =
     useContext(AppContext);
-
-  const [handleShowNotification] = useNotification(); //custom hook
-
+  const [handleShowNotification] = useNotification(); // Custom hook
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
 
+  // 📝 Validation schema
   const schema = yup.object().shape({
-    // schema to validate form datas
     username: yup
       .string()
       .min(6, "Tên phải dài hơn 6 kí tự")
@@ -80,7 +71,7 @@ const SignUp = () => {
     confirm_password: yup.string().required("Đây là trường bắt buộc"),
   });
 
-  // use useForm() hook and combine with YUP library to validate form datas
+  // 📝 useForm hook with YUP validation
   const {
     register,
     handleSubmit,
@@ -89,46 +80,38 @@ const SignUp = () => {
     resolver: yupResolver(schema),
   });
 
-  // handle sign-up with the form datas
+  // 📝 Handle sign-up with form data
   const handleSignUp = async (data) => {
-    // handle sign-up of user
     let flag = false;
     const date = new Date();
     if (
       data.password !== "" &&
-      md5(data.password) === md5(data.confirm_password) // encrypte password with md5 library to increase security for sensitive datas
+      md5(data.password) === md5(data.confirm_password)
     ) {
       flag = true;
     }
 
     if (flag) {
       setShowSpinner(true);
-      let state = true; // flag to check whether saving datas to firestore is success
+      let state = true;
       try {
         const res = await createUserWithEmailAndPassword(
           auth,
           data.email,
           data.password
         );
-
         const dataToStore = {
           userId: res.user.uid,
           username: data.username,
           email: data.email,
           phoneNumber: data.phoneNumber,
           password: md5(data.password),
-          createdAt:
-            date.getDay() +
-            "/" +
-            parseInt(date.getMonth() + 1) +
-            "/" +
-            date.getFullYear(),
-          updatedAt:
-            date.getDay() +
-            "/" +
-            parseInt(date.getMonth() + 1) +
-            "/" +
-            date.getFullYear(),
+          createdAt: `${date.getDay()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`,
+          updatedAt: `${date.getDay()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`,
           role: "user",
           photoURL: "",
           address: "",
@@ -137,17 +120,13 @@ const SignUp = () => {
         };
 
         await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
-
         await setDoc(doc(db, "userChats", res.user.uid), {});
       } catch (error) {
         state = false;
       }
 
       if (state) {
-        handleShowNotification(
-          "Đăng ký tài khoản thành công!",
-          "success"
-        );
+        handleShowNotification("Đăng ký tài khoản thành công!", "success");
         navigate("/real+estate/signin");
       } else {
         handleShowNotification(
@@ -156,7 +135,6 @@ const SignUp = () => {
         );
       }
     } else {
-      // handle errors when there are problems
       handleShowNotification(
         "Xác nhận mật khẩu không chính xác. Kiểm tra lại xác nhận mật khẩu của bạn",
         "error"
@@ -166,16 +144,15 @@ const SignUp = () => {
     setShowSpinner(false);
   };
 
-  // handle sign-up with Google Provider through Firebase SDK - can't use this feature because it has some problems with Chrome browser
+  // 📝 Handle sign-up with Google
   const handleSignUpWithGoogle = async () => {
     const date = new Date();
     const auth = getAuth(app);
-    var flag = false;
-    var userEmail = "";
-    const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
+    let flag = false;
+    let userEmail = "";
+    const provider = new GoogleAuthProvider();
     try {
-      const res = await signInWithPopup(auth, provider); // render popup to authenticate with Google
-
+      const res = await signInWithPopup(auth, provider);
       userEmail = res.user.email;
       const dataToStore = {
         userId: res.user.uid,
@@ -183,10 +160,12 @@ const SignUp = () => {
         email: res.user.email,
         phoneNumber: "",
         password: res.user.uid,
-        create_at:
-          date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
-        update_at:
-          date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
+        createdAt: `${date.getDay()}/${
+          date.getMonth() + 1
+        }/${date.getFullYear()}`,
+        updatedAt: `${date.getDay()}/${
+          date.getMonth() + 1
+        }/${date.getFullYear()}`,
         role: "user",
         photoURL: res.user.photoURL,
         address: "",
@@ -194,7 +173,6 @@ const SignUp = () => {
         registerMethod: "google",
       };
 
-      // check whether user had existed
       const userAccountRef = collection(db, "user_accounts");
       const q = query(userAccountRef, where("email", "==", res.user.email));
       const queryResult = await getDocs(q);
@@ -211,22 +189,19 @@ const SignUp = () => {
         );
       }
     } catch (error) {
-      const errorMessage = error.message;
       handleShowNotification(
         "Kết nối mạng không ổn định. Vui lòng thử lại",
         "error"
       );
-      console.log(errorMessage);
+      console.log(error.message);
     }
 
     if (flag) {
-      const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
-      const q = query(userAccountRef, where("email", "==", userEmail)); // query whether this email had existed in database
-      const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+      const userAccountRef = collection(db, "user_accounts");
+      const q = query(userAccountRef, where("email", "==", userEmail));
+      const result = await getDocs(q);
       result.docs.forEach((doc) => {
-        const dataToStoreToLocalStorage = {
-          userId: doc.id,
-        };
+        const dataToStoreToLocalStorage = { userId: doc.id };
         localStorage.setItem(
           "userInfo",
           JSON.stringify(dataToStoreToLocalStorage)
@@ -238,17 +213,19 @@ const SignUp = () => {
       navigate("/");
     }
   };
+
   return (
     <Transitions>
-      <div className="w-full h-fit flex justify-center items-center">
-        <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200 my-[50px]">
-          <h1 className="py-6 text-xl uppercase text-center font-medium">
+      <div
+        className="w-full h-fit flex justify-center items-center font-roboto bg-white sm:bg-gradient-to-tr from-[#CC8C08] to-[#FEFFAF] "
+        // sytle={{ background: "linear-gradient(to right, #CC8C08, #FEFFAF" }}
+      >
+        <div className="w-full sm:w-[400px] h-fit sm:shadow-md p-5 sm:border-[1px] sm:border-solid sm:border-slate-200 my-[50px] bg-white rounded-md">
+          <h1 className="py-6 text-3xl uppercase text-center font-medium text-[#CC8C08]">
             Đăng ký
           </h1>
           <form
             onSubmit={handleSubmit(handleSignUp)}
-            action="/"
-            method="POST"
             className="flex flex-col gap-y-4"
           >
             <div className="flex flex-col gap-y-2">
@@ -258,7 +235,7 @@ const SignUp = () => {
               <input
                 className={`${
                   errors.username ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                 id="username"
                 name="username"
                 type="text"
@@ -267,9 +244,7 @@ const SignUp = () => {
               />
               {errors.username && (
                 <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
+                  <IoIosWarning />
                   <span>{errors.username.message}</span>
                 </p>
               )}
@@ -281,7 +256,7 @@ const SignUp = () => {
               <input
                 className={`${
                   errors.email ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                 id="email"
                 name="email"
                 type="email"
@@ -290,9 +265,7 @@ const SignUp = () => {
               />
               {errors.email && (
                 <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
+                  <IoIosWarning />
                   <span>{errors.email.message}</span>
                 </p>
               )}
@@ -302,20 +275,18 @@ const SignUp = () => {
                 Số điện thoại
               </label>
               <div className="relative w-full h-fit">
-                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
-                  <span className="w-[40px] h-[30px] bg-cover bg-center">
-                    <img
-                      className="w-full h-full"
-                      src={flagIcon}
-                      alt="vn_flag_icon"
-                    />
-                  </span>
+                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200 rounded-tl-md rounded-bl-md">
+                  <img
+                    className="w-[40px] h-[30px] bg-cover bg-center"
+                    src={flagIcon}
+                    alt="vn_flag_icon"
+                  />
                   <span className="font-semibold">+84</span>
                 </span>
                 <input
                   className={`${
                     errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                   id="phoneNumber"
                   name="phoneNumber"
                   type="text"
@@ -323,12 +294,9 @@ const SignUp = () => {
                   {...register("phoneNumber")}
                 />
               </div>
-
               {errors.phoneNumber && (
                 <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
+                  <IoIosWarning />
                   <span>{errors.phoneNumber.message}</span>
                 </p>
               )}
@@ -339,9 +307,7 @@ const SignUp = () => {
               </label>
               <div className="relative">
                 <span
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -349,7 +315,7 @@ const SignUp = () => {
                 <input
                   className={`${
                     errors.password ? "border-red-500" : "border-slate-400"
-                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -359,22 +325,18 @@ const SignUp = () => {
               </div>
               {errors.password && (
                 <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
+                  <IoIosWarning />
                   <span>{errors.password.message}</span>
                 </p>
               )}
             </div>
             <div className="flex flex-col gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="password">
+              <label className="text-slate-500 pl-2" htmlFor="confirm_password">
                 Xác nhận mật khẩu
               </label>
               <div className="relative">
                 <span
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -384,7 +346,7 @@ const SignUp = () => {
                     errors.confirm_password
                       ? "border-red-500"
                       : "border-slate-400"
-                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                   id="confirm_password"
                   name="confirm_password"
                   type={showPassword ? "text" : "password"}
@@ -392,12 +354,9 @@ const SignUp = () => {
                   {...register("confirm_password")}
                 />
               </div>
-
               {errors.confirm_password && (
                 <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
+                  <IoIosWarning />
                   <span>{errors.confirm_password.message}</span>
                 </p>
               )}
@@ -405,7 +364,7 @@ const SignUp = () => {
             <div className="flex justify-center mt-5">
               <button
                 type="submit"
-                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80"
+                className="ml-1 text-white bg-[#CC8C08] h-[40px] px-5 w-[150px] hover:opacity-80 rounded-md"
               >
                 Đăng ký
               </button>
@@ -425,7 +384,7 @@ const SignUp = () => {
             </div>
             <div className="flex gap-x-1 items-center justify-center pb-6">
               <span>Nếu bạn đã có tài khoản! </span>
-              <span className="text-[#40A2D8] underline">
+              <span className="text-[#CC8C08] underline">
                 <Link to="/real+estate/signin">Đăng nhập</Link>
               </span>
             </div>
@@ -437,5 +396,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-// THIS FILE IS BEING BLOCKED

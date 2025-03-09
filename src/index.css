@@ -1,37 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
- 
+
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+  background: #eaa613;
 }
- 
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #fdc824;
 }
 
-.ql-container{
-    min-height: 300px;
+.ql-container {
+  min-height: 300px;
 }
 
-div .ql-editor.ql-blank{
-    height: 300px;
+div .ql-editor.ql-blank {
+  height: 300px;
 }
-  
-.chart-title{
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    color: red;
+
+.chart-title {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: red;
 }

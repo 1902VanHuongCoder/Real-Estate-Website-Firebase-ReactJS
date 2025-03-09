@@ -2,11 +2,10 @@ import React from "react";
 import News from "./News";
 import Filter from "./Filter";
 import FilterOnMobile from "./FilterOnMobile";
-import Example from "../test2";
 
 const MainContent = () => {
   return (
-    <div className="sm:flex h-fit">
+    <div className="sm:flex h-fit px-4">
       <FilterOnMobile />
       <News />
       <Filter />

@@ -1,85 +1,65 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useEffect, useState } from "react";
 import { useNotification } from "../Hooks/useNotification";
 
-//import Libraries
+// 📦 Import libraries
 import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 
-// import firebase services
+// 🔥 Import firebase services
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { app, db } from "../FirebaseConfig/firebase";
-import { getAuth } from "firebase/auth";
+import { db } from "../FirebaseConfig/firebase";
 
-//import icons
+// 📦 Import icons
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-//import component
+// 📦 Import components
 import Transitions from "./Partials/Transition";
 
-//import contexts
+// 🌐 Import context
 import { AppContext } from "../Context/AppContext";
 
+// 🏷️ Login component
 const Login = () => {
-  const [handleShowNotification] = useNotification(); //custom hook
-
+  const [handleShowNotification] = useNotification(); // Custom hook
   const [showPassword, setShowPassword] = useState(false);
-
   const { setSession, setShowSpinner, session, setShowCongratulation } =
     useContext(AppContext);
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
-  // handle login of user
-  const auth = getAuth(app);
-
+  // 📝 Handle login
   const handleLogin = async (e) => {
-    console.log(auth.currentUser);
-
     e.preventDefault();
     setShowSpinner(true);
-    const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
-    const q = query(userAccountRef, where("email", "==", email)); // query whether this email had existed in database
-    const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+    const userAccountRef = collection(db, "user_accounts"); // Reference to user accounts in database
+    const q = query(userAccountRef, where("email", "==", email)); // Query whether this email exists in database
+    const result = await getDocs(q); // The query command will return a document list that matches the email
+
     if (result.docs.length < 1) {
-      // if this account has not existed, notify for user to sign up new account
+      // If this account does not exist, notify the user to sign up for a new account
       handleShowNotification("Bạn chưa có tài khoản. Hãy đăng ký!", "error");
     } else {
       result.docs.forEach((doc) => {
         if (doc.data().registerMethod === "emailAndPassword") {
-          console.log("Sign up by email and password!");
           if (doc.data().password === md5(password)) {
             handleShowNotification("Đăng nhập thành công!", "success");
             localStorage.setItem(
               "userInfo",
-              JSON.stringify({
-                userId: doc.id,
-              })
+              JSON.stringify({ userId: doc.id })
             );
             const data = { ...doc.data(), id: doc.id };
-
             setSession(data);
-
             setShowCongratulation(true);
           } else {
             handleShowNotification("Sai mật khẩu", "error");
           }
         } else if (doc.data().registerMethod === "google") {
           handleShowNotification("Đăng nhập thành công!", "success");
-          localStorage.setItem(
-            "userInfo",
-            JSON.stringify({
-              userId: doc.id,
-            })
-          );
+          localStorage.setItem("userInfo", JSON.stringify({ userId: doc.id }));
           const data = { ...doc.data(), id: doc.id };
-
           setSession(data);
-
           setShowCongratulation(true);
         }
       });
@@ -90,26 +70,27 @@ const Login = () => {
   const userInfo = localStorage.getItem("userInfo");
 
   useEffect(() => {
-    if (userInfo && session && session.role === "user") {
-      navigate("/");
-    } else if (userInfo && session && session.role === "admin") {
-      navigate("/admin/list+of+posts");
-    } else if (userInfo && session && session.role === "staff") {
-      navigate("/staff/list+posts+of+staff");
+    if (userInfo && session) {
+      if (session.role === "user") {
+        navigate("/");
+      } else if (session.role === "admin") {
+        navigate("/admin/list+of+posts");
+      } else if (session.role === "staff") {
+        navigate("/staff/list+posts+of+staff");
+      }
     }
-  }, [userInfo, session]);
+  }, [userInfo, session, navigate]);
 
   return (
     <Transitions>
-      <div className="w-full h-fit flex justify-center items-center">
-        <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200 my-[50px]">
-          <h1 className="py-6 text-xl uppercase text-center font-medium">
+      <div className="w-full min-h-screen flex justify-center items-center font-roboto bg-white sm:bg-gradient-to-tr from-[#CC8C08] to-[#FEFFAF]">
+        <div className="w-full sm:w-[400px] h-fit sm:shadow-md p-5 sm:border-[1px] sm:border-solid sm:border-slate-200 my-[50px] bg-white rounded-md">
+          <h1 className="py-6 text-3xl uppercase text-center font-medium text-[#CC8C08]">
             Đăng Nhập
           </h1>
-
           <form
             method="POST"
-            onSubmit={(e) => handleLogin(e)}
+            onSubmit={handleLogin}
             className="flex flex-col gap-y-4"
           >
             <div className="flex flex-col gap-y-2">
@@ -117,8 +98,7 @@ const Login = () => {
                 Địa chỉ email
               </label>
               <input
-                className={` border-slate-400
-              }text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                className={`border-slate-400 text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                 id="email"
                 name="email"
                 type="email"
@@ -132,17 +112,13 @@ const Login = () => {
               </label>
               <div className="relative">
                 <span
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
                 <input
-                  className={`
-                border-slate-400
-              w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  className={`border-slate-400 w-full text-base pl-5 h-[50px] border-[1px] border-solid outline-none focus:border-[#CC8C08] rounded-md`}
                   id="password"
                   name="password"
                   autoComplete="on"
@@ -154,14 +130,14 @@ const Login = () => {
             <div className="flex justify-center mt-5">
               <button
                 type="submit"
-                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80"
+                className="ml-1 text-white bg-[#CC8C08] h-[40px] px-5 w-[150px] hover:opacity-80 rounded-md"
               >
                 Đăng nhập
               </button>
             </div>
             <div className="flex justify-center items-center gap-x-1 pb-6">
               <span>Nếu bạn chưa có tài khoản! </span>
-              <span className="text-[#40A2D8] underline">
+              <span className="text-[#CC8C08] underline">
                 <Link to="/real+estate/signup">Đăng ký ngay</Link>
               </span>
             </div>
@@ -173,5 +149,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// THIS FILE IS BEING OPENED

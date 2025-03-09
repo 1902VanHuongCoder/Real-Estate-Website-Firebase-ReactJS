@@ -1,37 +1,37 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext } from "react";
 
-// import icons
+// 📦 Import icons
 import { CiLogout, CiLogin, CiUser } from "react-icons/ci";
 import { SlNote } from "react-icons/sl";
 import { LuUserCog } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdMessage } from "react-icons/md";
 
-//import context
+// 🌐 Import contexts
 import { AppContext } from "../../Context/AppContext";
 
-//import library
+// 📦 Import libraries
 import { motion } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-// import images
+// 📷 Import images
 import defaultUserAvatar from "../../images/user_icon.png";
 
-// import custome hooks
+// 📦 Import custom hooks
 import { useNotification } from "../../Hooks/useNotification";
 
-//Create animation for user box when it comes and outs
+// 🎨 Animation variants for user box
 const userBoxVariants = {
   open: {
-    top: "87px",
+    top: "70px",
     right: "1%",
     transition: {
       duration: 0.2,
     },
   },
   close: {
-    top: "87px",
+    top: "70px",
     right: "-100%",
     transition: {
       duration: 0.2,
@@ -39,16 +39,16 @@ const userBoxVariants = {
   },
 };
 
+// 🏷️ UserBox component
 const UserBox = () => {
   const { openUserBox, session, setSession, setShowSpinner, setOpenUserBox } =
     useContext(AppContext);
 
   const navigate = useNavigate();
-
   const [handleShowNotification] = useNotification();
-
   const currentPath = useLocation();
 
+  // 📝 Handle sign out
   const handleSignOut = () => {
     setShowSpinner(true);
     setTimeout(() => {
@@ -60,6 +60,7 @@ const UserBox = () => {
       navigate("/real+estate/signin");
     }, 3000);
   };
+
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   return (
@@ -67,7 +68,7 @@ const UserBox = () => {
       variants={userBoxVariants}
       animate={openUserBox ? "open" : "close"}
       initial={false}
-      className={`absolute rounded-xl min-w-[320px] h-fit border-[1px] border-solid border-slate-200 bg-white z-40 shadow-lg`}
+      className="absolute rounded-xl min-w-[320px] h-fit border-[1px] border-solid border-slate-200 bg-white z-40 shadow-lg"
     >
       <div className="flex gap-x-2 p-5 border-b-[1px] border-solid border-slate-200">
         <div
@@ -76,7 +77,7 @@ const UserBox = () => {
               session && session.photoURL !== ""
                 ? session.photoURL
                 : defaultUserAvatar
-            } )`,
+            })`,
           }}
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
         ></div>
@@ -94,7 +95,7 @@ const UserBox = () => {
         <Link to="/">
           <span
             className={`${
-              currentPath.pathname === "/" ? "text-[#0B60B0] font-bold" : ""
+              currentPath.pathname === "/" ? "text-[#CC8C08] font-bold" : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
             <IoHomeOutline /> Trang chủ
@@ -104,7 +105,7 @@ const UserBox = () => {
           <span
             className={`${
               currentPath.pathname === "/real+estate/your+profile"
-                ? "text-[#0B60B0] font-bold"
+                ? "text-[#CC8C08] font-bold"
                 : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
@@ -113,32 +114,30 @@ const UserBox = () => {
         </Link>
         <Link to="/real+estate/update+profile">
           <span
-            className={` ${
+            className={`${
               currentPath.pathname === "/real+estate/update+profile"
-                ? "text-[#0B60B0] font-bold"
+                ? "text-[#CC8C08] font-bold"
                 : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
-            {" "}
             <LuUserCog /> Cập nhật hồ sơ
           </span>
         </Link>
         <Link to="/chat">
           <span
-            className={` ${
-              currentPath.pathname === "/chat" ? "text-[#0B60B0] font-bold" : ""
+            className={`${
+              currentPath.pathname === "/chat" ? "text-[#CC8C08] font-bold" : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
-            {" "}
             <MdMessage /> Nhắn tin
           </span>
         </Link>
         {session?.role === "staff" && (
           <Link to="/real+estate/post">
             <span
-              className={` ${
+              className={`${
                 currentPath.pathname === "/real+estate/post"
-                  ? "text-[#0B60B0] font-bold"
+                  ? "text-[#CC8C08] font-bold"
                   : ""
               } flex gap-x-2 text-lg cursor-pointer items-center`}
             >
@@ -170,5 +169,3 @@ const UserBox = () => {
 };
 
 export default UserBox;
-
-// THIS FILE WAS BEING BLOCKED

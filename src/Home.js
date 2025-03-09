@@ -1,11 +1,10 @@
-// import components
-import { Hero, MainContent } from "./Components/Middle";
-import Transitions from "./Components/Partials/Transition";
+import React from "react";
+import { Transitions, Hero, MainContent } from "./helpers";
 
 const Home = () => {
   return (
     <Transitions>
-      <div className="relative max-w-[1200px] mx-auto overflow-hidden">
+      <div className="relative w-screen mx-auto overflow-hidden">
         <Hero />
         <MainContent />
       </div>
