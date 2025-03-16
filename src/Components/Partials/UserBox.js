@@ -106,7 +106,22 @@ const UserBox = () => {
               currentPath.pathname === "/" ? "text-[#CC8C08] font-bold" : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
-            <IoHomeOutline /> Trang chủ
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-house"
+            >
+              <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+              <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            </svg>{" "}
+            <span>Trang chủ</span>
           </span>
         </Link>
         <Link to="/real+estate/your+profile">
@@ -117,7 +132,23 @@ const UserBox = () => {
                 : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
-            <CiUser /> Hồ sơ của bạn
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-square-user-round"
+            >
+              <path d="M18 21a6 6 0 0 0-12 0" />
+              <circle cx="12" cy="11" r="4" />
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+            </svg>
+            <span>Hồ sơ của bạn</span>
           </span>
         </Link>
         <Link to="/real+estate/update+profile">
@@ -128,7 +159,23 @@ const UserBox = () => {
                 : ""
             } flex gap-x-2 text-lg cursor-pointer items-center`}
           >
-            <LuUserCog /> Cập nhật hồ sơ
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-user-pen"
+            >
+              <path d="M11.5 15H7a4 4 0 0 0-4 4v2" />
+              <path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+              <circle cx="10" cy="7" r="4" />
+            </svg>
+            <span>Cập nhật hồ sơ</span>
           </span>
         </Link>
         {session && session?.role !== "staff" && (
@@ -140,7 +187,22 @@ const UserBox = () => {
                   : ""
               } flex gap-x-2 text-lg cursor-pointer items-center`}
             >
-              <MdMessage /> Nhắn tin
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-message-square-heart"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                <path d="M14.8 7.5a1.84 1.84 0 0 0-2.6 0l-.2.3-.3-.3a1.84 1.84 0 1 0-2.4 2.8L12 13l2.7-2.7c.9-.9.8-2.1.1-2.8" />
+              </svg>{" "}
+              <span>Nhắn tin</span>
             </span>
           </Link>
         )}
@@ -152,7 +214,23 @@ const UserBox = () => {
             onClick={handleSignOut}
             className="flex gap-x-2 text-lg cursor-pointer items-center"
           >
-            <CiLogout /> Đăng xuất
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-arrow-left-from-line"
+            >
+              <path d="m9 6-6 6 6 6" />
+              <path d="M3 12h14" />
+              <path d="M21 19V5" />
+            </svg>
+            <span>Đăng xuất</span>
           </li>
         ) : (
           <Link

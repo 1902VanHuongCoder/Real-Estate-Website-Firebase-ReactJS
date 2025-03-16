@@ -75,11 +75,11 @@ const Profile = () => {
               background:
                 "linear-gradient(45deg, rgba(255,244,106,1) 5%, rgba(253,200,36,1) 35%, rgba(234,166,19,1) 66%, rgba(204,140,8,1) 99%)",
             }}
-            className="absolute -top-[200px] left-[50%] translate-x-[-50%] w-[90%] sm:w-2/5 h-fit p-5 bg-[rgb(255,244,106)] rounded-md shadow-md overflow-hidden flex flex-col gap-y-1 items-center justify-center"
+            className="absolute -top-[200px] left-[50%] translate-x-[-50%] w-[90%] sm:w-2/5 h-fit p-5 bg-[rgb(255,244,106)] rounded-lg shadow-xl overflow-hidden flex flex-col gap-y-1 items-center justify-center"
           >
             {" "}
-            <div className="absolute inset-0 -z-1 w-full h-full backdrop-blur-lg"></div>
-            <div className="relative z-2 w-fit h-fit border-[5px] border-solid border-[#CC8C08] rounded-full">
+            <div className="absolute inset-0 -z-1 w-full h-full bg-[rgba(0,0,0,.1)]"></div>
+            <div className="relative z-2 w-fit h-fit border-[5px] border-solid border-white rounded-full shadow-2xl">
               <div
                 className="w-[120px] h-[120px] rounded-full bg-cover bg-center bg-no-repeat"
                 style={{
@@ -117,7 +117,7 @@ const Profile = () => {
                 <span className="italic">Ngày cập nhật: </span>
                 <span>
                   {session && session.update_at !== ""
-                    ? session.updatedAt
+                    ? session.update_at
                     : "Không xác định"}
                 </span>
               </p>
@@ -125,7 +125,7 @@ const Profile = () => {
                 <span className="italic"> Ngày gia nhập: </span>
                 <span>
                   {session && session.create_at !== ""
-                    ? session.createdAt
+                    ? session.create_at
                     : "Không xác định"}
                 </span>
               </p>

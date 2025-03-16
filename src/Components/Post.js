@@ -441,7 +441,7 @@ const Post = () => {
                   <select
                     id="unit"
                     name="unit"
-                    className="h-[48px] border-l-[1px] border-solid border-slate-400 px-3 outline-none"
+                    className="h-[48px] border-l-[1px] border-solid border-slate-400 px-3 outline-none rounded-tr-md rounded-br-md"
                     {...register("unit")}
                   >
                     <option value="billion">tỷ</option>

@@ -1,25 +1,30 @@
+// 📦 Import hooks
 import React, { useContext } from "react";
 import { AppContext } from "../Context/AppContext";
 
-//import icons
+// 📦 Import icons
 import { FaLocationDot } from "react-icons/fa6";
 import { FaBuilding, FaRulerCombined, FaRulerHorizontal } from "react-icons/fa";
 import { GiMultiDirections } from "react-icons/gi";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
 
-// import libraries
+// 📦 Import libraries
 import { useNavigate } from "react-router-dom";
 
-// import components
+// 📦 Import components
 import Transitions from "./Partials/Transition";
 
+//
+import badge from "../images/label.png";
+// 🏷️ StaffPost component
 const StaffPost = () => {
   const { session, postsWasFiltered } = useContext(AppContext);
   const navigate = useNavigate();
   const listPostOfStaff = [];
 
-  if (postsWasFiltered) {
+  // 📝 Filter posts by staff username
+  if (postsWasFiltered && session) {
     postsWasFiltered.forEach((element) => {
       if (element.username === session.username) {
         listPostOfStaff.push(element);
@@ -27,6 +32,7 @@ const StaffPost = () => {
     });
   }
 
+  // 📝 Handle post update
   const handleUpdatePost = (element) => {
     navigate("/staff/update+post", { state: element });
   };
@@ -54,7 +60,7 @@ const StaffPost = () => {
               >
                 <div
                   className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-                  style={{ backgroundImage: `url("../images/label.png")` }}
+                  style={{ backgroundImage: `url("${badge}")` }}
                 >
                   {item.price} {item.unit === "million" ? "triệu" : "tỷ"}
                 </div>
@@ -129,7 +135,7 @@ const StaffPost = () => {
                 <div className="flex justify-end mb-2 px-2">
                   <button
                     onClick={() => handleUpdatePost(item)}
-                    className="w-fit px-4 py-2 border-[2px] border-solid border-[#0B60B0] bg-[#0B60B0] text-white"
+                    className="w-fit px-4 py-2 border-[2px] border-solid border-[#CC8C08] bg-[#CC8C08] text-white rounded-md"
                   >
                     Sửa thông tin
                   </button>
@@ -138,9 +144,6 @@ const StaffPost = () => {
             </div>
           ))
         )}
-        {/* <div className="" key={index}>
-        {e.username}
-      </div> */}
       </div>
     </Transitions>
   );

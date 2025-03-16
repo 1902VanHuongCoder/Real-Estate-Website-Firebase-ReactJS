@@ -1,18 +1,19 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext } from "react";
 import { useNotification } from "../../Hooks/useNotification";
 
-// import contexts
+// 📦 Import contexts
 import { AppContext } from "../../Context/AppContext";
 
-// import libraries
+// 📦 Import libraries
 import { AnimatePresence, motion } from "framer-motion";
 
-// import firebase services
+// 🔥 Import firebase services
 import { db, storage } from "../../FirebaseConfig/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { deleteDoc, doc } from "firebase/firestore";
 
+// 🎨 Animation variants
 const confirmBoxVariants = {
   hidden: {
     scale: 0,
@@ -22,11 +23,13 @@ const confirmBoxVariants = {
   },
 };
 
+// 🏷️ ConfirmBox component
 const ConfirmBox = () => {
   const { showConfirmBox, setShowConfirmBox } = useContext(AppContext);
   const [handleShowNotification] = useNotification();
+
+  // 📝 Handle hiding the confirm box
   const handleHiddenConfirmBox = () => {
-    console.log("Cancle");
     setShowConfirmBox({
       show: false,
       content: "",
@@ -35,26 +38,35 @@ const ConfirmBox = () => {
     });
   };
 
+  // 📝 Handle confirming the deletion
   const handleConfirmDeleting = async () => {
     if (showConfirmBox.typeOfCollection === "posts") {
       // Create a reference to the file to delete
       const listImagesNeedToDelete =
         showConfirmBox.dataToDelete.besideImageURLs;
-      listImagesNeedToDelete.push(showConfirmBox.dataToDelete.titleImageURL);
 
-      for (let i = 0; i < listImagesNeedToDelete.length; i++) {
-        const desertRef = ref(storage, listImagesNeedToDelete[i].imageURL);
+      const newImagesToDeleteList = [];
+      listImagesNeedToDelete.forEach((i) =>
+        newImagesToDeleteList.push(i.imageURL)
+      );
 
-        console.log(listImagesNeedToDelete[i]);
+      newImagesToDeleteList.push(showConfirmBox.dataToDelete.titleImageURL);
 
+      for (let i = 0; i < newImagesToDeleteList.length; i++) {
+        const desertRef = ref(storage, newImagesToDeleteList[i]);
+
+        try {
+          deleteObject(desertRef)
+            .then(() => {
+              console.log("File was deleted successfully.");
+            })
+            .catch((error) => {
+              console.log("Deleting file failed.");
+            });
+        } catch (error) {
+          continue;
+        }
         // Delete the file
-        deleteObject(desertRef)
-          .then(() => {
-            console.log("File was deleted successfully.");
-          })
-          .catch((error) => {
-            console.log("Deleting file is failed.");
-          });
       }
       try {
         await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
@@ -77,7 +89,7 @@ const ConfirmBox = () => {
             console.log("File was deleted successfully.");
           })
           .catch((error) => {
-            console.log("Deleting file is failed.");
+            console.log("Deleting file failed.");
           });
       }
 
@@ -91,7 +103,7 @@ const ConfirmBox = () => {
             console.log("File was deleted successfully.");
           })
           .catch((error) => {
-            console.log("Deleting file is failed.");
+            console.log("Deleting file failed.");
           });
       }
 
@@ -116,8 +128,9 @@ const ConfirmBox = () => {
       typeOfCollection: null,
     });
 
-    window.location.reload();
+    // window.location.reload();
   };
+
   return (
     <AnimatePresence initial={false}>
       {showConfirmBox.show && (
@@ -130,18 +143,21 @@ const ConfirmBox = () => {
           style={{ transformOrigin: "center" }}
           className="fixed h-screen w-screen bg-[rgba(0,0,0,.5)] z-50 flex justify-center items-center"
         >
-          <div className="relative w-[300px] h-[200px] bg-white">
-            <p className="px-4 py-2 w-full text-center text-[#0B60B0] text-lg uppercase border-b-[1px] border-solid border-slate-200">
+          <div className="relative w-[300px] h-[200px] bg-white rounded-md">
+            <p className="px-4 py-2 w-full text-center text-[#CC8C08] text-lg uppercase border-b-[1px] border-solid border-slate-200">
               Xác nhận
             </p>
             <p className="px-4 py-5">{showConfirmBox.content}</p>
             <div className="flex justify-end px-4 gap-x-6">
-              <button onClick={handleHiddenConfirmBox} className="">
+              <button
+                onClick={handleHiddenConfirmBox}
+                className="text-[#CC8C08] border-solid border-[#CC8C08] border-[2px] rounded-md px-4 py-1 hover:bg-[#CC8C08] hover:text-white"
+              >
                 Hủy
               </button>
               <button
                 onClick={handleConfirmDeleting}
-                className="border-solid border-[#0B60B0] border-[2px] rounded-md px-4 py-1"
+                className="text-white bg-[#CC8C08] border-solid border-[#CC8C08] border-[2px] rounded-md px-4 py-1 hover:opacity-80"
               >
                 Đồng ý
               </button>

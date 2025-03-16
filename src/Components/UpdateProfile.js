@@ -397,7 +397,9 @@ const UpdateProfile = () => {
                     type="text"
                     autoComplete="on"
                     placeholder={
-                      session?.phoneNumber !== "" && session?.phoneNumber
+                      session && session?.phoneNumber !== ""
+                        ? session?.phoneNumber
+                        : "Cập nhật số điện thoại của bạn ..."
                     }
                     {...register("phoneNumber")}
                   />

@@ -95,7 +95,7 @@ const ChatBox = () => {
       </h1>
       <div className="flex flex-col md:flex-row min-h-fit border-y-[1px] border-solid border-gray-300">
         {/* Sidebar */}
-        <div className="md:w-1/5 w-full border-r border-gray-300 overflow-y-auto border-y-[1px] sm:border-y-[0px] border-y-solid border-y-slate-200">
+        <div className="md:w-2/5 w-full border-r border-gray-300 overflow-y-auto border-y-[1px] sm:border-y-[0px] border-y-solid border-y-slate-200">
           {chats &&
             Object.entries(chats)
               ?.sort((a, b) => b[1].date - a[1].date)
@@ -108,20 +108,22 @@ const ChatBox = () => {
                     "bg-[#EAA613] text-white"
                   }`}
                 >
-                  <img
-                    src={
-                      chat[1].userInfo.photoURL !== ""
-                        ? chat[1].userInfo.photoURL
-                        : user_icon
-                    }
-                    alt="user_avatar"
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div className="ml-4">
+                  <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                    <img
+                      src={
+                        chat[1].userInfo.photoURL !== ""
+                          ? chat[1].userInfo.photoURL
+                          : user_icon
+                      }
+                      alt="user_avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="ml-4 max-w-full">
                     <span className="block font-semibold">
                       {chat[1].userInfo.displayName}
                     </span>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 truncate w-[250px]">
                       {chat[1].lastMessage?.text}
                     </p>
                   </div>
@@ -139,13 +141,16 @@ const ChatBox = () => {
             <div>
               {/* Partner */}
               <div className="flex items-center p-4 border-b border-gray-300">
-                <img
-                  src={
-                    data.user.photoURL !== "" ? data.user.photoURL : user_icon
-                  }
-                  alt="user_avatar"
-                  className="w-10 h-10 rounded-full"
-                />
+                <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                  <img
+                    src={
+                      data.user.photoURL !== "" ? data.user.photoURL : user_icon
+                    }
+                    alt="user_avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
                 <p className="ml-4 font-semibold">{data.user.displayName}</p>
               </div>
 

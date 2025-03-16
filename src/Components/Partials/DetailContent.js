@@ -127,7 +127,9 @@ const DetailContent = () => {
               <MdOutlineZoomOutMap />
             </div>
             <div className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
-              {imageIndex + 1}/{images.length}
+              {images && isNaN(imageIndex + 1) === false
+                ? imageIndex + 1 + "/" + images.length
+                : "0/0"}
             </div>
           </div>
           <div className="relative w-full h-full flex justify-center items-center">

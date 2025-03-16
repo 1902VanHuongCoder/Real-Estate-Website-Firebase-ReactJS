@@ -61,7 +61,7 @@ const News = () => {
             className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit"
           >
             <div
-              className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
+              className="relative w-full h-[400px] bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url("${item.titleImageURL?.imageURL || ""}")`,
               }}

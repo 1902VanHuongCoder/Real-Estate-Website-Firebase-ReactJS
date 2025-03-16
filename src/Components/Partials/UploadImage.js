@@ -265,7 +265,7 @@ const UploadImage = ({
                       onClick={() => {
                         handleRemoveImage(index);
                       }}
-                      className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
+                      className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] text-white bg-red-500 rounded-full text-sm"
                     >
                       X
                     </button>
@@ -278,7 +278,7 @@ const UploadImage = ({
                 return (
                   <div
                     key={index}
-                    className="relative w-[200px] h-auto shrink-0 grow-0 bg-red-700 opacity-55"
+                    className="relative w-[200px] h-auto shrink-0 grow-0 opacity-55"
                   >
                     <img
                       src={url}

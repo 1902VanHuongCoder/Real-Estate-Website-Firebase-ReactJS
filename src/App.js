@@ -16,7 +16,6 @@ import {
   SignUp,
   OptionResults,
   Profile,
-  Notification,
   Loading,
   Congratulation,
   AccountList,
@@ -28,11 +27,11 @@ import {
   GeneralInfo,
   UpdatePost,
   ListOfPosts,
-  Test,
   StaffAccountsList,
   StaffPost,
   NotFound,
   ImageContainer,
+  Notification,
 } from "./helpers";
 
 // 🌐 Importing context
@@ -40,7 +39,6 @@ import { AppContext } from "./Context/AppContext";
 
 // 📦 Importing additional components
 import { ToTop, NavigationBar, Footer, Sidebar } from "./Components/Middle";
-import { fetchUserData } from "./firebase-helpers";
 
 // 🏷️ Main App component
 function App() {
@@ -130,7 +128,7 @@ function App() {
       <Congratulation />
       <div className="relative max-w-screen min-h-screen mx-auto overflow-hidden">
         {!hideNavAndToTop && <NavigationBar />}
-        {/* <Notification /> */}
+        <Notification />
         {session &&
           session.role === "admin" &&
           location.pathname !== "/real+estate/your+profile" &&
@@ -193,7 +191,7 @@ function App() {
                 path="/admin/list+of+staff+accounts"
                 element={<StaffAccountsList />}
               ></Route>
-              <Route path="/test" element={<Test />}></Route>
+              <Route path="/update+post" element={<UpdatePost />}></Route>
             </Routes>
           </AnimatePresence>
         </div>
