@@ -1,16 +1,17 @@
-// import hooks
+// 📦 Import hooks
 import React, { useEffect, useState } from "react";
 
-//import firebase services
+// 🔥 Import firebase services
 import { storage } from "../../FirebaseConfig/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-//import icons
+// 📦 Import icons
 import { FaCloudUploadAlt } from "react-icons/fa";
 
-// import motion library
+// 📦 Import motion library
 import { AnimatePresence, motion } from "framer-motion";
 
+// 🏷️ UploadImage component
 const UploadImage = ({
   titleImageURL,
   setTitleImageURL,
@@ -29,7 +30,7 @@ const UploadImage = ({
     details: [],
   }); // list of images
 
-  // handle to store local path of image to render for users
+  // 📝 Handle to store local path of image to render for users
   const handleUploadTitleImage = (event) => {
     if (event.target.files.length > 0) {
       const url = URL.createObjectURL(event.target.files[0]);
@@ -37,7 +38,7 @@ const UploadImage = ({
     }
   };
 
-  // handle to store multiple local path of images to render for users
+  // 📝 Handle to store multiple local path of images to render for users
   const handleUploadMultipleImages = (evnt) => {
     if (evnt.target.files.length > 0) {
       const selectedFiles = Array.from(evnt.target.files);
@@ -52,7 +53,7 @@ const UploadImage = ({
     }
   };
 
-  // handle to remove list of selected images
+  // 📝 Handle to remove list of selected images
   const handleRemoveImage = (index) => {
     const urlArray = [];
     if (listOfImageURLs.length > 0) {
@@ -85,7 +86,7 @@ const UploadImage = ({
     setListOfImages({ details: detailsArray, imglist: urlArray });
   };
 
-  // handle store title image to storage of firebase service
+  // 📝 Handle store title image to storage of firebase service
   const handleUploadTitleImageToStorage = (e) => {
     e.preventDefault();
     if (titleImage.details) {
@@ -95,7 +96,7 @@ const UploadImage = ({
       ); // create reference to storage in products folder
       const uploadTask = uploadBytesResumable(storageRef, titleImage.details); // upload image to storage
       uploadTask.on(
-        //keep tracking upload process to display nescessary informations
+        //keep tracking upload process to display necessary informations
         "state_changed",
         (snapshot) => {
           // return percent of completed upload
@@ -115,11 +116,9 @@ const UploadImage = ({
     }
   };
 
-  // handle store list of post's images to firebase storage
+  // 📝 Handle store list of post's images to firebase storage
   const handleUploadMultipleImageToStorage = (e) => {
     e.preventDefault();
-
-    console.log(listOfImages.details);
 
     if (listOfImages.details) {
       for (let i = 0; i < listOfImages.details.length; i++) {
@@ -132,7 +131,7 @@ const UploadImage = ({
           listOfImages.details[i]
         ); // upload image to storage
         uploadTask.on(
-          //keep tracking upload process to display nescessary informations
+          //keep tracking upload process to display necessary informations
           "state_changed",
           (snapshot) => {
             // return percent of completed upload
@@ -144,10 +143,6 @@ const UploadImage = ({
           (error) => console.log(error),
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              // setListOfImageURLs([
-              //   ...listOfImageURLs,
-              //   { imageURL: url, name: listOfImages.details[i].name },
-              // ]);
               listOfImageURLs.push({
                 imageURL: url,
                 name: listOfImages.details[i].name,
@@ -178,14 +173,14 @@ const UploadImage = ({
 
   return (
     <div className="w-full py-5">
-      <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
+      <p className="border-l-[5px] border-solid border-[#CC8C08] mb-5 text-xl pl-2">
         Chọn hình ảnh
       </p>
       <div>
         <label htmlFor="titleImage" className="text-slate-500">
           Chọn ảnh cho phần tiêu đề
         </label>
-        <div className="relative flex p-5 my-5 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+        <div className="relative flex p-5 my-5 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400 rounded-md">
           {titleImage || titleImageURL ? (
             <img
               src={titleImage ? titleImage.localURL : titleImageURL.imageURL}
@@ -217,7 +212,7 @@ const UploadImage = ({
           <button
             onClick={handleUploadTitleImageToStorage}
             type="button"
-            className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
+            className="ml-1 text-white bg-[#CC8C08] h-[40px] px-5 hover:opacity-80 uppercase rounded-md"
           >
             Xác nhận ảnh chủ đề
           </button>
@@ -230,7 +225,7 @@ const UploadImage = ({
                     duration: 0.2,
                   },
                 }}
-                className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden"
+                className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden rounded-md"
               >
                 <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">
                   {percentOfUploadingTitleImage}%
@@ -240,8 +235,8 @@ const UploadImage = ({
                   animate={{
                     x: calPercentUploadingTitleImage + "%",
                   }}
-                  className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
- w-full h-full -z-1`}
+                  className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[#CC8C08] bg-[linear-gradient(50deg,_rgba(204,140,8,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(204,140,8,1)_30%,_rgba(204,140,8,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(204,140,8,1)_58%,_rgba(204,140,8,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(204,140,8,1)_85%,_rgba(204,140,8,1)_96%,_rgba(255,255,255,1)_96%)]
+ w-full h-full -z-1 rounded-md`}
                 ></motion.div>
               </motion.div>
             )}
@@ -252,7 +247,7 @@ const UploadImage = ({
         <label htmlFor="listOfImages" className="text-slate-500">
           Chọn các hình ảnh tài sản còn lại
         </label>
-        <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+        <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400 rounded-md">
           <div className="flex flex-wrap w-full justify-center gap-2">
             {listOfImageURLs?.length > 0 &&
               listOfImageURLs.map((url, index) => {
@@ -263,7 +258,7 @@ const UploadImage = ({
                   >
                     <img
                       src={url.imageURL}
-                      className="w-full h-auto border-[4px] border-solid boder-slate-400"
+                      className="w-full h-auto border-[4px] border-solid boder-slate-400 rounded-md"
                       alt="test"
                     />
                     <button
@@ -287,7 +282,7 @@ const UploadImage = ({
                   >
                     <img
                       src={url}
-                      className="w-full h-auto border-[4px] border-solid boder-slate-400"
+                      className="w-full h-auto border-[4px] border-solid boder-slate-400 rounded-md"
                       alt="test"
                     />
                     <button
@@ -302,7 +297,7 @@ const UploadImage = ({
                 );
               })}
           </div>
-          <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
+          <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80 ">
             <label className="flex gap-x-1" htmlFor="listOfImages">
               <span className="flex gap-x-1 items-center text-white">
                 <span>Tải lên</span>
@@ -325,7 +320,7 @@ const UploadImage = ({
           <button
             type="button"
             onClick={handleUploadMultipleImageToStorage}
-            className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
+            className="ml-1 text-white bg-[#CC8C08] h-[40px] px-5 hover:opacity-80 uppercase rounded-md"
           >
             Xác nhận ảnh còn lại
           </button>
@@ -338,7 +333,7 @@ const UploadImage = ({
                     duration: 0.2,
                   },
                 }}
-                className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden"
+                className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden rounded-md"
               >
                 <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">
                   {percentOfUploadingImagesList}%
@@ -348,8 +343,8 @@ const UploadImage = ({
                   animate={{
                     x: calPercentOfUploadingImagesList + "%",
                   }}
-                  className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
- w-full h-full -z-1`}
+                  className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[#CC8C08] bg-[linear-gradient(50deg,_rgba(204,140,8,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(204,140,8,1)_30%,_rgba(204,140,8,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(204,140,8,1)_58%,_rgba(204,140,8,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(204,140,8,1)_85%,_rgba(204,140,8,1)_96%,_rgba(255,255,255,1)_96%)]
+ w-full h-full -z-1 rounded-md`}
                 ></motion.div>
               </motion.div>
             )}
@@ -361,5 +356,3 @@ const UploadImage = ({
 };
 
 export default UploadImage;
-
-// THIS FILE WAS BEING BLOCK

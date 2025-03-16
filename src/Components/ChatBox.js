@@ -133,7 +133,7 @@ const ChatBox = () => {
         <div className="md:w-4/5 w-full flex flex-col mt-5 sm:mt-0 text-md">
           {data.chatId === "null" ? (
             <div className="flex items-center justify-center h-[400px] sm:h-[500px]">
-              <p className="text-gray-500">Hãy chọn một cuộc trò chuyện</p>
+              <p className="text-gray-500">Chưa có cuộc trò chuyện nào.</p>
             </div>
           ) : (
             <div>

@@ -24,7 +24,10 @@ import StaffAccountsList from "./Components/Partials/StaffAccountList";
 import StaffPost from "./Components/StaffPost";
 import { Hero, MainContent } from "./Components/Middle";
 import Transitions from "./Components/Partials/Transition";
+import NotFound from "./NotFound";
+import ImageContainer from "./Components/Partials/ImageContainer";
 export {
+  ImageContainer,
   Post,
   Home,
   Details,
@@ -52,4 +55,5 @@ export {
   Hero,
   MainContent,
   Transitions,
+  NotFound,
 };

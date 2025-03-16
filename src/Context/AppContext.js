@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
-import { fetchUserData } from "../firebase-helpers";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../FirebaseConfig/firebase";
 export const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const [sideBarOpen, setSideBarOpen] = useState(false); // state to store and control sidebar
   const [isOpenUserBox, setOpenUserBox] = useState(false); // state to store and control userbox
-  const [showImage, setShowImage] = useState(false); // toggle to view images in detail page
+  const [showImage, setShowImage] = useState({ show: false, images: [] }); // toggle to view images in detail page
   const [session, setSession] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);

@@ -1,28 +1,29 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useState } from "react";
 import { useNotification } from "../Hooks/useNotification";
 
-// import packages
+// 📦 Import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-// import icons
+// 📦 Import icons
 import { IoIosWarning } from "react-icons/io";
 
-// import components
+// 📦 Import components
 import Transitions from "./Partials/Transition";
 import UploadImage from "./Partials/UploadImage";
 import Editor from "./Editor";
 
-//import firebase services
+// 🔥 Import firebase services
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
-//import library
+// 📦 Import libraries
 import { v4 as uuidv4 } from "uuid";
 
+// 🏷️ Post component
 const Post = () => {
   const { setShowSpinner, session } = useContext(AppContext); // create loading animation when adding new property
 
@@ -43,8 +44,8 @@ const Post = () => {
 
   const [isGround, setIsGround] = useState(false); // the property that need to add is ground
 
+  // 📝 Validation schema
   const schema = yup.object().shape({
-    // schema to validate form datas
     postTitle: yup
       .string()
       .max(100, "Tối đa 100 ký tự")
@@ -87,7 +88,7 @@ const Post = () => {
       .required("Trường này được yêu cầu"),
   });
 
-  // use useForm() hook and combine with YUP library to validate form datas
+  // 📝 useForm hook with YUP validation
   const {
     register,
     handleSubmit,
@@ -96,6 +97,7 @@ const Post = () => {
     resolver: yupResolver(schema),
   });
 
+  // 📝 Handle post submission
   const handleToPost = async (data) => {
     const date = new Date();
     setShowSpinner(true);
@@ -147,7 +149,6 @@ const Post = () => {
               date.getFullYear(),
           };
         } else {
-          console.log("Running....");
           groundDatas = {
             // general infomations
             propertyId: uuidv4(),
@@ -207,7 +208,6 @@ const Post = () => {
     } else {
       handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
     }
-    console.log(data.commission);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -217,21 +217,19 @@ const Post = () => {
 
   return (
     <Transitions>
-      <div className="w-4/5 sm:p-5 mx-auto">
-        <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
-          <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-            THÊM TÀI SẢN
-          </span>
+      <div className="w-full sm:w-4/5 mx-auto px-2">
+        <h1 className="w-full text-center text-2xl font-md pt-5 pb-8">
+          <span>THÊM BÀI ĐĂNG</span>
         </h1>
-        <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
+        <p className="border-l-[5px] border-solid border-[#CC8C08]  text-xl pl-2">
           Chọn loại tài sản
         </p>
-        <div className="flex justify-between gap-x-2 mb-5">
+        <div className="flex justify-between gap-x-2 mb-8 mt-2">
           <label
             htmlFor="home"
             className={`w-1/2 ${
               isHouse ? "bg-green-200" : "bg-slate-200"
-            }  h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
+            } h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
           >
             <input
               checked={isHouse}
@@ -250,7 +248,7 @@ const Post = () => {
             htmlFor="ground"
             className={`w-1/2 ${
               isGround ? "bg-green-200" : "bg-slate-200"
-            }  h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
+            } h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
           >
             <input
               checked={isGround}
@@ -265,6 +263,7 @@ const Post = () => {
             <span>Đất</span>
           </label>
         </div>
+
         <form
           id="post_form"
           className="w-full h-fit flex flex-col gap-y-3"
@@ -272,7 +271,7 @@ const Post = () => {
           method="POST"
           onSubmit={handleSubmit(handleToPost)}
         >
-          <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
+          <p className="border-l-[5px] border-solid border-[#CC8C08] mb-2 text-xl pl-2">
             Nội dung chính
           </p>
 
@@ -282,9 +281,9 @@ const Post = () => {
               Tiêu đề bài đăng
             </label>
             <input
-              className={` ${
+              className={`${
                 errors.postTitle ? "border-red-500" : "border-slate-400"
-              } text-xl sm:text-2xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+              } text-xl sm:text-2xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
               type="text"
               name="postTitle"
               id="postTitle"
@@ -300,7 +299,7 @@ const Post = () => {
               </p>
             )}
           </div>
-          <div className="flex gap-x-2">
+          <div className="flex flex-col sm:flex-row items-center gap-x-2">
             <div className="flex flex-col gap-y-2 basis-3/4">
               <label className="text-slate-500" htmlFor="address">
                 Địa chỉ
@@ -308,7 +307,7 @@ const Post = () => {
               <input
                 className={`${
                   errors.address ? "border-red-500" : "border-slate-400"
-                } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                 type="text"
                 name="address"
                 id="address"
@@ -325,22 +324,22 @@ const Post = () => {
               )}
             </div>
 
-            <div className=" flex flex-col gap-y-2 basis-1/4">
+            <div className="flex flex-col gap-y-2 sm:basis-1/4 mt-3 sm:mt-0">
               <label className="text-slate-500" htmlFor="commission">
                 Phần trăm hoa hồng
               </label>
-              <div className="relative">
+              <div className={`relative`}>
                 <input
                   className={`${
                     errors.commission ? "border-red-500" : "border-slate-400"
-                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } text-xl pl-5 h-[50px] w-full outline-none focus:border-[#CC8C08] border-[1px] border-solid rounded-md`}
                   type="text"
                   name="commission"
                   id="commission"
                   autoComplete="on"
                   {...register("commission")}
                 />
-                <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                <span className="absolute h-[48px] w-[70px] flex justify-center items-center bg-slate-200 right-[1px] top-[1px] bottom-[1px] border-l-0 border-[1px] border-solid rounded-r-md">
                   %
                 </span>
               </div>
@@ -356,16 +355,16 @@ const Post = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
+          <div className="flex flex-col sm:flex-row gap-x-5 gap-y-3 pb-5 border-b-[1px] border-solid border-slate-200">
             {isHouse && (
-              <div className="text-base basis-1/3 flex flex-col gap-y-1 ">
+              <div className="text-base basis-1/3 flex flex-col gap-y-1">
                 <label htmlFor="typeOfProperty" className="text-slate-500">
                   Chọn loại tài sản
                 </label>
                 <select
                   id="typeOfProperty"
                   name="typeOfProperty"
-                  className="h-[50px] border-[1px] border-solid px-3 outline-none"
+                  className="h-[50px] border-[1px] border-solid rounded-md px-3 outline-none"
                   {...register("typeOfProperty")}
                 >
                   <option value="căn hộ chung cư">Căn hộ chung cư</option>
@@ -384,7 +383,7 @@ const Post = () => {
                 </select>
               </div>
             )}
-            <div className="text-base basis-1/3 flex flex-col gap-y-4 ">
+            <div className="text-base basis-1/3 flex flex-col gap-y-2">
               <div className="text-slate-500">Hình thức</div>
               <div className="flex gap-x-5">
                 <label className="flex items-center gap-x-1">
@@ -430,7 +429,7 @@ const Post = () => {
                 <input
                   className={`${
                     errors.price ? "border-red-500" : "border-slate-400"
-                  } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                   type="text"
                   name="price"
                   id="price"
@@ -438,11 +437,11 @@ const Post = () => {
                   {...register("price")}
                 />
 
-                <div className="absolute right-0 top-0 flex justify-center">
+                <div className="absolute flex justify-center top-[1px] bottom-[1px] right-[1px]">
                   <select
                     id="unit"
                     name="unit"
-                    className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
+                    className="h-[48px] border-l-[1px] border-solid border-slate-400 px-3 outline-none"
                     {...register("unit")}
                   >
                     <option value="billion">tỷ</option>
@@ -450,7 +449,7 @@ const Post = () => {
                   </select>
 
                   {methodWithProperty.renting === true && (
-                    <span className="h-[50px] w-[70px] flex justify-center items-center bg-slate-200 border-l-0 border-[1px] border-solid">
+                    <span className="h-[48px] w-[70px] flex justify-center items-center bg-slate-200 border-l-0 border-[1px] border-solid rounded-r-md">
                       /tháng
                     </span>
                   )}
@@ -466,8 +465,9 @@ const Post = () => {
               )}
             </div>
           </div>
+
           <div className="w-full py-5 border-b-[1px] border-solid border-slate-200">
-            <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2 ">
+            <p className="border-l-[5px] border-solid border-[#CC8C08] mb-5 text-xl pl-2">
               Mô tả tài sản
             </p>
             <div className="flex w-full gap-x-5">
@@ -476,18 +476,18 @@ const Post = () => {
                   <label className="text-slate-500" htmlFor="acreage">
                     Diện tích
                   </label>
-                  <div className="relative">
+                  <div className="relative rounded-md">
                     <input
                       className={`${
                         errors.acreage ? "border-red-500" : "border-slate-400"
-                      } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                       type="number"
                       name="acreage"
                       id="acreage"
                       autoComplete="on"
                       {...register("acreage")}
                     />
-                    <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                    <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid border-slate-400 rounded-tr-md rounded-br-md">
                       m<sup>2</sup>
                     </span>
                   </div>
@@ -505,11 +505,11 @@ const Post = () => {
                     <label className="text-slate-500" htmlFor="facade">
                       Diện tích mặt tiền
                     </label>
-                    <div className="relative">
+                    <div className="relative rounded-md overflow-hidden">
                       <input
                         className={` ${
                           errors.facade ? "border-red-500" : "border-slate-400"
-                        } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                        } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                         type="number"
                         name="facade"
                         id="facade"
@@ -517,7 +517,7 @@ const Post = () => {
                         defaultValue={0}
                         {...register("facade")}
                       />
-                      <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                      <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid border-slate-400 rounded-tr-md rounded-br-md">
                         m<sup>2</sup>
                       </span>
                     </div>
@@ -539,7 +539,7 @@ const Post = () => {
                     <input
                       className={`${
                         errors.floors ? "border-red-500" : "border-slate-400"
-                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                       type="number"
                       name="floors"
                       id="floors"
@@ -566,7 +566,7 @@ const Post = () => {
                   <select
                     id="direction"
                     name="direction"
-                    className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
+                    className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none rounded-md"
                     {...register("direction")}
                   >
                     <option value="Đông">Đông</option>
@@ -591,7 +591,7 @@ const Post = () => {
                         errors.livingrooms
                           ? "border-red-500"
                           : "border-slate-400"
-                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                       type="number"
                       name="livingrooms"
                       id="livingrooms"
@@ -617,7 +617,7 @@ const Post = () => {
                     <input
                       className={`${
                         errors.bedrooms ? "border-red-500" : "border-slate-400"
-                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                       type="number"
                       name="bedrooms"
                       id="bedrooms"
@@ -643,7 +643,7 @@ const Post = () => {
                     <input
                       className={`${
                         errors.toilets ? "border-red-500" : "border-slate-400"
-                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08] `}
                       type="number"
                       name="toilets"
                       id="toilets"
@@ -666,25 +666,26 @@ const Post = () => {
               )}
             </div>
             <div className="flex flex-col gap-y-2">
-              <p className="text-slate-400">Thông tin mô tả cụ thể</p>
+              <p className="text-slate-500">Thông tin mô tả cụ thể</p>
               <Editor value={value} setValueEditor={setValueEditor} />
             </div>
           </div>
+
           <UploadImage
             setTitleImageURL={setTitleImageURL}
             setListOfImageURLs={setListOfImageURLs}
             listOfImageURLs={listOfImageURLs}
           />
-          <div className="flex justify-end">
+          <div className="flex justify-center sm:justify-end mb-10">
             <button
               type="reset"
-              className="ml-1 text-white bg-red-400 h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
+              className="ml-1 text-red-500 border-[2px] border-red-500 border-solid py-3 px-5 w-full sm:w-fit hover:opacity-80 uppercase rounded-md"
             >
               Reset
             </button>
             <button
               type="submit"
-              className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
+              className="ml-1 text-white bg-[#CC8C08] py-3 px-5 w-full sm:w-fit hover:opacity-80 uppercase rounded-md"
             >
               Đăng bài
             </button>

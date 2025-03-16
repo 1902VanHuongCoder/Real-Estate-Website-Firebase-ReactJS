@@ -35,6 +35,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 // 🏷️ UpdateProfile component
 const UpdateProfile = () => {
@@ -52,8 +53,6 @@ const UpdateProfile = () => {
 
   const [handleShowNotification] = useNotification();
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const {
     register,
     handleSubmit,
@@ -61,6 +60,9 @@ const UpdateProfile = () => {
     getFieldState,
     formState: { errors },
   } = useForm();
+
+  // 📦 Import hooks
+  const navigate = useNavigate();
 
   // 📝 Handle to preview background image when user uploads their image
   const handleUploadBackground = (event) => {
@@ -243,6 +245,27 @@ const UpdateProfile = () => {
               })`,
             }}
           >
+            <div
+              onClick={() => navigate(-1)}
+              className="absolute top-5 left-5 text-white cursor-pointer bg-[rgba(0,0,0,.4)] p-2 rounded-full hover:opacity-80"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-circle-arrow-left"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M16 12H8" />
+                <path d="m12 8-4 4 4 4" />
+              </svg>
+            </div>
             <label
               htmlFor="background"
               className="absolute top-5 sm:top-[80%] right-4 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80 rounded-md cursor-pointer"

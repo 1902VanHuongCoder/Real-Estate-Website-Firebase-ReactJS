@@ -1,65 +1,47 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useState } from "react";
 import { useNotification } from "../../Hooks/useNotification";
-// import packages
+
+// 📦 Import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoIosWarning } from "react-icons/io";
 
-// import icons
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+// 📦 Import icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-// import firebase services
+// 🔥 Import firebase services
 import {
-  GoogleAuthProvider,
   getAuth,
-  signInWithPopup,
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
 import { db, app } from "../../FirebaseConfig/firebase";
+import { setDoc, doc } from "firebase/firestore";
 
-import {
-  addDoc,
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-
-//import context
+// 🌐 Import context
 import { AppContext } from "../../Context/AppContext";
 
-//import library
+// 📦 Import libraries
 import md5 from "md5";
 import { useNavigate } from "react-router-dom";
-
-//import components
-import Transitions from "./Transition";
-
-//import library
 import { v4 as uuidv4 } from "uuid";
 
-//import images
+// 📷 Import images
 import flagIcon from "../../images/vn_flag_icon.png";
+import Transitions from "./Transition";
 
+// 🏷️ AddStaff component
 const AddStaff = () => {
   const auth = getAuth(app);
-
   const { setShowSpinner } = useContext(AppContext);
-
-  const [handleShowNotification] = useNotification(); //custom hook
-
+  const [handleShowNotification] = useNotification();
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
 
+  // 📝 Validation schema
   const schema = yup.object().shape({
-    // schema to validate form datas
     username: yup
       .string()
       .min(6, "Tên phải dài hơn 6 kí tự")
@@ -84,7 +66,7 @@ const AddStaff = () => {
     dateOfBirth: yup.string().required(),
   });
 
-  // use useForm() hook and combine with YUP library to validate form datas
+  // 📝 useForm hook with YUP validation
   const {
     register,
     handleSubmit,
@@ -93,21 +75,20 @@ const AddStaff = () => {
     resolver: yupResolver(schema),
   });
 
-  // handle sign-up with the form datas
+  // 📝 Handle sign-up
   const handleSignUp = async (data) => {
-    // handle sign-up of user
     let flag = false;
     const date = new Date();
     if (
       data.password !== "" &&
-      md5(data.password) === md5(data.confirm_password) // encrypte password with md5 library to increase security for sensitive datas
+      md5(data.password) === md5(data.confirm_password)
     ) {
       flag = true;
     }
 
     if (flag) {
       setShowSpinner(true);
-      let state = true; // flag to check whether saving datas to firestore is success
+      let state = true;
 
       try {
         const res = await createUserWithEmailAndPassword(
@@ -147,16 +128,12 @@ const AddStaff = () => {
           revenue: 0,
         };
         await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
-
         await setDoc(doc(db, "userChats", res.user.uid), {});
       } catch (error) {
         state = false;
       }
       if (state) {
-        handleShowNotification(
-          "Đăng ký tài khoản thành công!",
-          "success"
-        );
+        handleShowNotification("Đăng ký tài khoản thành công!", "success");
         navigate("/real+estate/signin");
       } else {
         handleShowNotification(
@@ -165,7 +142,6 @@ const AddStaff = () => {
         );
       }
     } else {
-      // handle errors when there are problems
       handleShowNotification(
         "Xác nhận mật khẩu không chính xác. Kiểm tra lại xác nhận mật khẩu của bạn",
         "error"
@@ -177,27 +153,25 @@ const AddStaff = () => {
 
   return (
     <Transitions>
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full">
         <form
           onSubmit={handleSubmit(handleSignUp)}
           action="/"
           method="POST"
           className="flex flex-col gap-y-4"
         >
-          <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
-            <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-              THÊM NHÂN VIÊN
-            </span>
+          <h1 className="w-full text-center text-2xl font-md py-5">
+            <span>THÊM NHÂN VIÊN</span>
           </h1>
-          <div className="w-fit h-fit p-5 border-[1px] border-solid border-slate-200 mb-5">
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="username">
+          <div className="w-full sm:w-[60%] mx-auto h-fit p-4 mb-5">
+            <div className="flex flex-col mb-5 w-full sm:w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="username">
                 Tên đăng nhập
               </label>
               <input
                 className={`${
                   errors.username ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                 id="username"
                 name="username"
                 type="text"
@@ -213,14 +187,14 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="email">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="email">
                 Địa chỉ email
               </label>
               <input
                 className={`${
                   errors.email ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                 id="email"
                 name="email"
                 type="email"
@@ -236,12 +210,12 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="phoneNumber">
                 Số điện thoại
               </label>
               <div className="relative w-full h-fit">
-                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
+                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200 rounded-tl-md rounded-bl-md">
                   <span className="w-[40px] h-[30px] bg-cover bg-center">
                     <img
                       className="w-full h-full"
@@ -254,7 +228,7 @@ const AddStaff = () => {
                 <input
                   className={`${
                     errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                   id="phoneNumber"
                   name="phoneNumber"
                   type="text"
@@ -262,7 +236,6 @@ const AddStaff = () => {
                   {...register("phoneNumber")}
                 />
               </div>
-
               {errors.phoneNumber && (
                 <p className="flex items-center gap-x-1 text-red-500">
                   <span>
@@ -272,8 +245,8 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="password">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="password">
                 Mật khẩu
               </label>
               <div className="relative">
@@ -288,7 +261,7 @@ const AddStaff = () => {
                 <input
                   className={`${
                     errors.password ? "border-red-500" : "border-slate-400"
-                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -305,8 +278,8 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="password">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="confirm_password">
                 Xác nhận mật khẩu
               </label>
               <div className="relative">
@@ -323,7 +296,7 @@ const AddStaff = () => {
                     errors.confirm_password
                       ? "border-red-500"
                       : "border-slate-400"
-                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                   id="confirm_password"
                   name="confirm_password"
                   type={showPassword ? "text" : "password"}
@@ -331,7 +304,6 @@ const AddStaff = () => {
                   {...register("confirm_password")}
                 />
               </div>
-
               {errors.confirm_password && (
                 <p className="flex items-center gap-x-1 text-red-500">
                   <span>
@@ -341,15 +313,14 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="position">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="position">
                 Chức vụ
               </label>
               <input
                 className={`${
                   errors.position ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                 id="position"
                 name="position"
                 type="text"
@@ -365,15 +336,14 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-
-            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
-              <label className="text-slate-500 pl-2" htmlFor="dateOfBirth">
+            <div className="flex flex-col mb-5 w-full gap-y-2">
+              <label className="text-slate-500" htmlFor="dateOfBirth">
                 Ngày sinh
               </label>
               <input
                 className={`${
                   errors.dateOfBirth ? "border-red-500" : "border-slate-400"
-                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                } text-base pl-5 pr-2 h-[50px] border-[1px] border-solid rounded-md outline-none focus:border-[#CC8C08]`}
                 id="dateOfBirth"
                 name="dateOfBirth"
                 type="date"
@@ -389,10 +359,10 @@ const AddStaff = () => {
                 </p>
               )}
             </div>
-            <div className="flex justify-center mb-5 w-[500px] mt-10">
+            <div className="flex justify-end mb-5 w-full mt-10">
               <button
                 type="submit"
-                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[200px] hover:opacity-80"
+                className="ml-1 text-white bg-[#CC8C08] py-3 px-4 w-[200px] hover:opacity-80 rounded-md"
               >
                 Thêm nhân viên
               </button>

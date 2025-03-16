@@ -14,13 +14,9 @@ import { AppContext } from "../../Context/AppContext";
 import ImageZoom from "react-image-zooom";
 import { wrap } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
 
-const Example = () => {
+const ImageContainer = (state) => {
   const { setShowImage } = useContext(AppContext);
-
-  const { state } = useLocation();
-
   const [[page, direction], setPage] = useState([0, 0]);
 
   const variants = {
@@ -67,20 +63,19 @@ const Example = () => {
     setPage([page + newDirection, newDirection]);
   };
 
-  const extractImageIntoArray = useCallback(() => {
-    const images = [];
-    if (state) {
-      images.push(state.titleImageURL.imageURL);
-      state.besideImageURLs.map((item, i) => images.push(item.imageURL));
-      // console.log("Function run");
-    }
+  // const extractImageIntoArray = useCallback(() => {
+  //   const images = [];
+  //   if (state) {
+  //     images.push(state.titleImageURL.imageURL);
+  //     state.besideImageURLs.map((item, i) => images.push(item.imageURL));
+  //   }
 
-    return images;
-  }, [state]);
+  //   return images;
+  // }, [state]);
 
-  const images = extractImageIntoArray();
+  // const images = extractImageIntoArray();
+  const images = state.state;
   const imageIndex = wrap(0, images.length, page);
-  console.log("Run after images");
 
   const handleViewImages = (index) => {
     if (index < page) {
@@ -112,7 +107,7 @@ const Example = () => {
           </p>
           <button
             onClick={() => {
-              setShowImage(false);
+              setShowImage({ show: false, images: [] });
             }}
             className="hover:opacity-80 text-white w-[40px] h-[40px] sm:w-[60px] sm:h-[60px] rounded-md bg-[rgba(255,255,255,.2)] flex justify-center items-center text-2xl"
           >
@@ -185,4 +180,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default ImageContainer;

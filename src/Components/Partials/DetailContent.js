@@ -116,12 +116,12 @@ const DetailContent = () => {
   }, [postId]);
 
   return (
-    <div>
+    <div className="w-screen min-h-screen">
       <div className="flex gap-x-1 lg:flex-row flex-col">
         <div className="relative lg:basis-[80%] w-full h-[400px] overflow-hidden">
           <div className="absolute left-0 w-full h-[50px] bottom-5 z-40 flex justify-between px-5">
             <div
-              onClick={() => setShowImage(true)}
+              onClick={() => setShowImage({ show: true, images: images })} // Open image container
               className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-2xl"
             >
               <MdOutlineZoomOutMap />

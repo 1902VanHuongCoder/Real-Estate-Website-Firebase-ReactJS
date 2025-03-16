@@ -37,25 +37,15 @@ const NavigationBar = () => {
     location.pathname !== "/staff/login" && (
       <div className="sticky top-0 w-full z-40 flex flex-col gap-y-4 bg-[#CC8C08] py-2 px-4 shadow-md font-roboto">
         <div className="flex justify-between items-center">
-          {/* 📱 Menu icon for mobile */}
-          <button
-            className="block lg:hidden"
-            onClick={() => {
-              setSideBarOpen(!sideBarOpen);
-            }}
-          >
-            <TiThMenu className="text-2xl text-white" />
-          </button>
-
           {/* 🔍 Search input and icon for mobile */}
-          <div className="flex items-center gap-x-2 lg:hidden flex-1 sm:flex-none px-6">
+          <div className="flex items-center gap-x-2 lg:hidden flex-1 sm:flex-none pr-6">
             <input
               type="text"
               name="phoneQuery"
               id="phoneQuery"
               placeholder="Tìm kiếm tài sản..."
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 sm:flex-none px-3 rounded-md border-[2px] border-solid border-[#FEFFAF] focus:outline-none focus:border-2 focus:border-solid focus:border-[#CC8C08] w-[150px] h-[40px]"
+              className="flex-1 sm:flex-none px-3 rounded-md border-[2px] border-solid border-[#FEFFAF] focus:outline-none focus:border-2 focus:border-solid focus:border-[#CC8C08] w-full h-[40px]"
             />
             <button onClick={handleSearch}>
               <FaSearch className="text-2xl text-white" />
@@ -63,7 +53,16 @@ const NavigationBar = () => {
           </div>
 
           {/* 🖼️ Logo (hidden on mobile) */}
-          <Link to="/" className="hidden sm:flex gap-x-2">
+          <Link
+            to={
+              session && session.role === "admin"
+                ? "/admin"
+                : session && session.role === "staff"
+                ? "/staff/list+posts+of+staff"
+                : "/"
+            }
+            className="hidden sm:flex gap-x-2"
+          >
             <span className="w-[40px] h-[40px] rounded-full overflow-hidden">
               <img src={logo} alt="logo" />
             </span>

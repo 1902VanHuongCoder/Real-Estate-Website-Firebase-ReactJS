@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../Context/AppContext";
 
 //import icons
@@ -33,9 +33,13 @@ const StaffPost = () => {
 
   return (
     <Transitions>
-      <div className="grid grid-cols-2 gap-x-4 mb-10">
+      <div
+        className={`grid ${
+          listPostOfStaff.length === 0 ? "grid-cols-1" : "grid-cols-2"
+        }  gap-x-4 mb-10`}
+      >
         {listPostOfStaff.length === 0 ? (
-          <div>Chưa có bài đăng nào.</div>
+          <p className="py-5 text-center w-full">Chưa có bài đăng nào.</p>
         ) : (
           listPostOfStaff.map((item, index) => (
             <div

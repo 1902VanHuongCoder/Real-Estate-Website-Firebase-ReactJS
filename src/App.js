@@ -31,19 +31,15 @@ import {
   Test,
   StaffAccountsList,
   StaffPost,
+  NotFound,
+  ImageContainer,
 } from "./helpers";
 
 // 🌐 Importing context
 import { AppContext } from "./Context/AppContext";
 
 // 📦 Importing additional components
-import {
-  ToTop,
-  NavigationBar,
-  Footer,
-  Sidebar,
-  ImageContainer,
-} from "./Components/Middle";
+import { ToTop, NavigationBar, Footer, Sidebar } from "./Components/Middle";
 import { fetchUserData } from "./firebase-helpers";
 
 // 🏷️ Main App component
@@ -129,14 +125,24 @@ function App() {
   return (
     <div className="relative font-roboto max-w-screen overflow-hidden">
       <Loading />
-      {showImage && <ImageContainer />}
+      {showImage.show && <ImageContainer state={showImage.images} />}
       <ConfirmBox />
       <Congratulation />
       <div className="relative max-w-screen min-h-screen mx-auto overflow-hidden">
         {!hideNavAndToTop && <NavigationBar />}
         {/* <Notification /> */}
-        {/* {session && session.role === "admin" && <AdminDashboard />} */}
-        {/* {session && session.role === "staff" && <StaffDashboard />} */}
+        {session &&
+          session.role === "admin" &&
+          location.pathname !== "/real+estate/your+profile" &&
+          location.pathname !== "/real+estate/update+profile" && (
+            <AdminDashboard />
+          )}
+        {session &&
+          session.role === "staff" &&
+          location.pathname !== "/real+estate/your+profile" &&
+          location.pathname !== "/real+estate/update+profile" && (
+            <StaffDashboard />
+          )}
         <div onClick={() => setOpenUserBox(false)}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -159,7 +165,9 @@ function App() {
                 element={<OptionResults />}
               ></Route>
 
-              {/* 
+              {/* Add a route for non-existent paths */}
+              <Route path="*" element={<NotFound />}></Route>
+
               <Route path="/real+estate/post" element={<Post />}></Route>
               <Route
                 path="/admin/list+of+posts"
@@ -185,11 +193,11 @@ function App() {
                 path="/admin/list+of+staff+accounts"
                 element={<StaffAccountsList />}
               ></Route>
-              <Route path="/test" element={<Test />}></Route> */}
+              <Route path="/test" element={<Test />}></Route>
             </Routes>
           </AnimatePresence>
         </div>
-        {/* {!hideNavAndToTop && <ToTop />} */}
+        {!hideNavAndToTop && location.pathname !== "/chat" && <ToTop />}
         {session && session.role === "user" && <Footer />}
         <Sidebar />
       </div>

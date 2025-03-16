@@ -1,24 +1,26 @@
-// import hooks
+// 📦 Import hooks
 import React, { useContext, useEffect, useState } from "react";
 import useConfirmBox from "../../Hooks/useConfirmBox";
 
-//import icons
+// 📦 Import icons
 import { GoDotFill } from "react-icons/go";
 
-//import contexts
+// 🌐 Import contexts
 import { AppContext } from "../../Context/AppContext";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../FirebaseConfig/firebase";
 import { useNotification } from "../../Hooks/useNotification";
 import Transitions from "./Transition";
 
+// 🏷️ StaffAccountsList component
 const StaffAccountsList = () => {
   const { news } = useContext(AppContext);
   const [display] = useConfirmBox();
   const [userAccounts, setUserAccounts] = useState(null);
-
   const [handleShowNotification] = useNotification();
   const [currentPage, setCurrentPage] = useState(1);
+
+  // 📝 Fetch staff accounts data
   const fetchData = async () => {
     try {
       await getDocs(collection(db, "user_accounts")).then((response) => {
@@ -28,7 +30,6 @@ const StaffAccountsList = () => {
         }));
 
         let newArray = dataResponsed.filter((e) => e.role === "staff");
-
         setUserAccounts(newArray);
       });
     } catch (error) {
@@ -57,42 +58,40 @@ const StaffAccountsList = () => {
     buttonsArray.push(j);
   }
 
+  // 📝 Handle delete staff account
   const handleToDeleteStaffAccount = async (element) => {
-    display("Bạn có chắc chắn muốn xóa nhân viên này?", element, "user_accounts");
+    display(
+      "Bạn có chắc chắn muốn xóa nhân viên này?",
+      element,
+      "user_accounts"
+    );
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
 
+  // 📝 Format number with commas
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   return (
     <Transitions>
-      <div className=" border-[1px] border-solid border-slate-200 p-4 text-center mt-5 rounded-t-xl">
+      <div className="border-[1px] border-solid border-slate-200 p-4 text-center mt-5 rounded-t-xl">
         <div className="flex items-center gap-x-2 text-xl">
           <span>
             <GoDotFill />
           </span>
-          <span>Danh sách tài khoản người dùng</span>
+          <span>Danh sách tài khoản nhân viên</span>
         </div>
 
-        <div className="w-full mt-5 h-fit">
-          {/* Search Input */}
-          {/* <div className="w-full flex justify-end items-center gap-x-1 border-b-[1px] border-b-solid border-b-slate-200 pb-10">
-          <input
-            className="pl-2 w-[200px] sm:w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
-            type="text"
-            placeholder="Tên bài đăng"
-          />
-          <button className="text-white h-[40px] px-3 bg-[#0B60B0]">
-            Tìm kiếm
-          </button>
-        </div> */}
-
-          <div className="w-[350px] overflow-x-scroll sm:overflow-auto sm:w-full">
+        <div className="w-full mt-5 h-fit overflow-x-scroll sm:overflow-hidden">
+          <div className="w-[1000px]  sm:w-full border-1 rounded-md overflow-hidden">
             {/* Properties */}
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-[#40A2D8] text-white">
+                <tr className="bg-[#CC8C08] text-white">
                   <th className="border-[1px] border-solid border-slate-200 p-4 text-center">
                     STT
                   </th>
@@ -120,15 +119,13 @@ const StaffAccountsList = () => {
                 {userAccounts ? (
                   userAccounts.map((element, index) => (
                     <tr key={index}>
-                      <td
-                        className={`border-[1px] border-solid border-slate-200 p-4 text-center`}
-                      >
+                      <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
                         {index + 1}
                       </td>
-                      <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
+                      <td className="border-[1px] border-solid border-slate-200 p-4 text-left">
                         {element.username}
                       </td>
-                      <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
+                      <td className="border-[1px] border-solid border-slate-200 p-4 text-left">
                         {element.dateOfBirth}
                       </td>
                       <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
@@ -137,12 +134,12 @@ const StaffAccountsList = () => {
                       <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
                         {element.address}
                       </td>
-                      <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
-                        {element.revenue}
+                      <td className="border-[1px] border-solid border-slate-200 p-4 text-left">
+                        {formatNumber(element.revenue)}
                       </td>
                       <td className="border-[1px] border-solid border-slate-200 p-4 text-center">
                         <button
-                          className="text-red-500"
+                          className="text-red-500 hover:opacity-80 rounded-md"
                           onClick={() => handleToDeleteStaffAccount(element)}
                         >
                           Xóa
@@ -157,16 +154,14 @@ const StaffAccountsList = () => {
                 )}
               </tbody>
             </table>
-
-            {/* Posts list */}
           </div>
-          {/*Pagenation*/}
+          {/* Pagination */}
           <div className="w-full flex justify-center gap-x-1 mt-10">
             {buttonsArray?.map((button, index) => (
               <button
                 onClick={() => setCurrentPage(button)}
                 key={index}
-                className="w-[50px] h-[50px] border-[1px] border-solid border-slate-300 bg-[#40A2D8] text-white"
+                className="w-[50px] h-[50px] border-[1px] border-solid border-slate-300 bg-[#CC8C08] text-white rounded-md"
               >
                 {button}
               </button>

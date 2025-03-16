@@ -92,7 +92,15 @@ const UserBox = () => {
       </div>
 
       <ul className="flex flex-col gap-y-1 px-5 py-5 border-b-[1px] border-solid border-slate-200">
-        <Link to="/">
+        <Link
+          to={
+            session && session.role === "admin"
+              ? "/admin"
+              : session && session.role === "staff"
+              ? "/staff/list+posts+of+staff"
+              : "/"
+          }
+        >
           <span
             className={`${
               currentPath.pathname === "/" ? "text-[#CC8C08] font-bold" : ""
@@ -123,25 +131,16 @@ const UserBox = () => {
             <LuUserCog /> Cập nhật hồ sơ
           </span>
         </Link>
-        <Link to="/chat">
-          <span
-            className={`${
-              currentPath.pathname === "/chat" ? "text-[#CC8C08] font-bold" : ""
-            } flex gap-x-2 text-lg cursor-pointer items-center`}
-          >
-            <MdMessage /> Nhắn tin
-          </span>
-        </Link>
-        {session?.role === "staff" && (
-          <Link to="/real+estate/post">
+        {session && session?.role !== "staff" && (
+          <Link to="/chat">
             <span
               className={`${
-                currentPath.pathname === "/real+estate/post"
+                currentPath.pathname === "/chat"
                   ? "text-[#CC8C08] font-bold"
                   : ""
               } flex gap-x-2 text-lg cursor-pointer items-center`}
             >
-              <SlNote /> Thêm tài sản
+              <MdMessage /> Nhắn tin
             </span>
           </Link>
         )}

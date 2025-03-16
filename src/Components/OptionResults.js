@@ -52,7 +52,7 @@ const OptionResults = () => {
   };
 
   return (
-    <div className="w-full h-fit p-5">
+    <div className="w-full min-h-[calc(100vh-124px)] p-5">
       <h1 className="pl-4 text-xl font-medium border-l-[5px] border-l-solid border-l-[#CC8C08]">
         Kết quả tìm kiếm cho cho từ khóa "{state}"
       </h1>
@@ -154,7 +154,7 @@ const OptionResults = () => {
           ))}
         </div>
       ) : (
-        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[600px] text-lg">
+        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[300px] text-lg">
           Không có kết quả phù hợp
         </div>
       )}

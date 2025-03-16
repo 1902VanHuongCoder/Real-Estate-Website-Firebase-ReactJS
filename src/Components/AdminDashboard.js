@@ -1,34 +1,20 @@
-//import hooks
-import React, { useContext, useEffect, useState } from "react";
+// 📦 Import hooks
+import React, { useContext } from "react";
 
-// import images
+// 📷 Import images
 import building from "../images/buiding.jpg";
+import companyLogo from "../images/logo.png";
 
-// import contexts
+// 🌐 Import contexts
 import { AppContext } from "../Context/AppContext";
 
-// import firebase services
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../FirebaseConfig/firebase";
-
-// import libraries
-import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-// import custome hooks
-import { useNotification } from "../Hooks/useNotification";
-
+// 🏷️ AdminDashboard component
 const AdminDashboard = () => {
-  const {
-    showCongratulation,
-    setShowCongratulation,
-    setShowSpinner,
-    setNews,
-    setPostsWasFiltered,
-  } = useContext(AppContext);
+  const { showCongratulation, setShowCongratulation } = useContext(AppContext);
 
-  const [handleShowNotification] = useNotification();
   const location = useLocation();
   if (showCongratulation) {
     setTimeout(() => {
@@ -36,189 +22,180 @@ const AdminDashboard = () => {
     }, 5000);
   }
 
-  // const fetchData = async () => {
-  //   setShowSpinner(true);
-
-  //   try {
-  //     await getDocs(collection(db, "posts")).then((response) => {
-  //       const dataResponsed = response.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       }));
-  //       setNews(dataResponsed);
-  //       setPostsWasFiltered(dataResponsed);
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     handleShowNotification(
-  //       "Kết nối mạng không ổn định! Hãy thử lại sau.",
-  //       "error"
-  //     );
-  //   }
-
-  //   setShowSpinner(false);
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  const backgroundAnimationGeneralInfo = {
-    enter: {
-      top: 0,
-      left: "-100%",
-      transition: {
-        duration: 0.5,
-      },
-    },
-    center: {
-      top: 0,
-      left: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-    exit: {
-      top: 0,
-      left: "100%",
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
   return (
     <div className="w-full h-fit mb-5">
       <div
         className="relative text-white w-full h-[400px] bg-cover rounded-b-xl overflow-hidden"
         style={{ backgroundImage: `url("${building}")` }}
       >
-        <div className="top-0 left-0 absolute w-full h-full flex justify-center items-center flex-col gap-y-4 bg-[rgba(0,0,0,.2)]">
-          <p className="text-xl">Công ty Bất Động Sản</p>
-          <h1 className="text-8xl text-center">Văn Hưởng</h1>
-          <p className="text-lg italic">Uy tín - Tận tâm - Hiệu quả</p>
+        <div className="top-0 left-0 absolute w-full h-full flex justify-center items-center flex-col gap-y-2 sm:flex-row gap-x-8 bg-[rgba(0,0,0,.4)]">
+          <div>
+            <img
+              src={companyLogo}
+              alt="company logo"
+              className="w-[150px] h-[150px] rounded-full"
+            />
+          </div>
+          <div className="flex flex-col gap-y-2 items-center sm:items-start">
+            <p className="text-md sm:text-xl">Công ty Bất Động Sản</p>
+            <h1 className="text-4xl sm:text-8xl text-center drop-shadow-md ">
+              Văn Hưởng
+            </h1>
+            <p className="text-lg  hidden sm:block">
+              Uy tín - Tận tâm - Hiệu quả
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="relative mt-5 w-full overflow-x-scroll sm:overflow-hidden rounded-lg h-[60px] border-[1px] border-solid border-slate-200">
+      <div className="relative mt-5 w-full overflow-x-scroll sm:overflow-hidden h-[60px] border-y-[1px] border-solid border-slate-200">
         <AnimatePresence mode="wait">
           <ul className="flex w-full h-full text-lg">
             <Link
               to="/admin"
-              className="relative px-5  flex justify-center items-center "
+              className={`relative px-5 flex justify-center items-center ${
+                location.pathname === "/admin" ? "bg-[#CC8C08] text-white" : ""
+              }`}
             >
-              {location.pathname === "/admin" && (
-                <motion.span
-                  key="/admin"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={backgroundAnimationGeneralInfo}
-                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
-                ></motion.span>
-              )}
-
-              <span
-                className={`relative z-10 ${
-                  location.pathname === "/admin" && "text-white"
-                }`}
-              >
-                Tổng Quan
+              <span className="relative flex items-center gap-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-box"
+                >
+                  <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                  <path d="m3.3 7 8.7 5 8.7-5" />
+                  <path d="M12 22V12" />
+                </svg>
+                <span className="hidden sm:inline">Tổng quan</span>
               </span>
             </Link>
             <Link
               to="/admin/list+of+posts"
-              className="relative px-5  flex justify-center items-center "
+              className={`relative px-5 flex justify-center items-center ${
+                location.pathname === "/admin/list+of+posts"
+                  ? "bg-[#CC8C08] text-white"
+                  : ""
+              }`}
             >
-              {location.pathname === "/admin/list+of+posts" && (
-                <motion.span
-                  key="/admin/list+of+posts"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={backgroundAnimationGeneralInfo}
-                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
-                ></motion.span>
-              )}
-              <span
-                className={`relative z-10 ${
-                  location.pathname === "/admin/list+of+posts" && "text-white"
-                }`}
-              >
-                Danh Sách Tài Sản
+              <span className="relative flex items-center gap-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-school"
+                >
+                  <path d="M14 22v-4a2 2 0 1 0-4 0v4" />
+                  <path d="m18 10 3.447 1.724a1 1 0 0 1 .553.894V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7.382a1 1 0 0 1 .553-.894L6 10" />
+                  <path d="M18 5v17" />
+                  <path d="m4 6 7.106-3.553a2 2 0 0 1 1.788 0L20 6" />
+                  <path d="M6 5v17" />
+                  <circle cx="12" cy="9" r="2" />
+                </svg>
+                <span className="hidden sm:inline">Tất cả bài đăng</span>
               </span>
             </Link>
             <Link
               to="/admin/list+of+user+accounts"
-              className="relative px-5  flex justify-center items-center "
+              className={`relative px-5 flex justify-center items-center ${
+                location.pathname === "/admin/list+of+user+accounts"
+                  ? "bg-[#CC8C08] text-white"
+                  : ""
+              }`}
             >
-              {location.pathname === "/admin/list+of+user+accounts" && (
-                <motion.span
-                  key="/admin/list+of+user+accounts"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={backgroundAnimationGeneralInfo}
-                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
-                ></motion.span>
-              )}
-
-              <span
-                className={`relative z-10 ${
-                  location.pathname === "/admin/list+of+user+accounts" &&
-                  "text-white"
-                }`}
-              >
-                Danh Sách Tài Khoản Người Dùng
+              <span className="relative flex items-center gap-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-contact"
+                >
+                  <path d="M16 2v2" />
+                  <path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
+                  <path d="M8 2v2" />
+                  <circle cx="12" cy="11" r="3" />
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                </svg>
+                <span className="hidden sm:inline">Tất cả người dùng</span>
               </span>
             </Link>
             <Link
               to="/admin/list+of+staff+accounts"
-              className="relative px-5  flex justify-center items-center "
+              className={`relative px-5 flex justify-center items-center ${
+                location.pathname === "/admin/list+of+staff+accounts"
+                  ? "bg-[#CC8C08] text-white"
+                  : ""
+              }`}
             >
-              {location.pathname === "/admin/list+of+staff+accounts" && (
-                <motion.span
-                  key="/admin/list+of+staff+accounts"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={backgroundAnimationGeneralInfo}
-                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
-                ></motion.span>
-              )}
-
-              <span
-                className={`relative z-10 ${
-                  location.pathname === "/admin/list+of+staff+accounts" &&
-                  "text-white"
-                }`}
-              >
-                Danh Sách Tài Khoản Nhân Viên
+              <span className="relative flex items-center gap-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-handshake"
+                >
+                  <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+                  <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
+                  <path d="m21 3 1 11h-2" />
+                  <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
+                  <path d="M3 4h8" />
+                </svg>
+                <span className="hidden sm:inline">Tất cả nhân viên</span>
               </span>
             </Link>
-
             <Link
               to="/admin/add+staff"
-              className="relative px-5  flex justify-center items-center "
+              className={`relative px-5 flex justify-center items-center ${
+                location.pathname === "/admin/add+staff"
+                  ? "bg-[#CC8C08] text-white"
+                  : ""
+              }`}
             >
-              {location.pathname === "/admin/add+staff" && (
-                <motion.span
-                  key="/admin/add+staff"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={backgroundAnimationGeneralInfo}
-                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
-                ></motion.span>
-              )}
-
-              <span
-                className={`relative z-10 ${
-                  location.pathname === "/admin/add+staff" && "text-white"
-                }`}
-              >
-                Thêm Nhân Viên
+              <span className="relative flex items-center gap-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-file-plus"
+                >
+                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                  <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                  <path d="M9 15h6" />
+                  <path d="M12 18v-6" />
+                </svg>
+                <span className="hidden sm:inline">Thêm nhân viên</span>
               </span>
             </Link>
           </ul>
