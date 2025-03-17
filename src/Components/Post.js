@@ -92,11 +92,13 @@ const Post = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
+  // 📝 Handle post submission
   // 📝 Handle post submission
   const handleToPost = async (data) => {
     const date = new Date();
@@ -192,6 +194,10 @@ const Post = () => {
             isHouse ? houseDatas : groundDatas
           );
           handleShowNotification("Thêm tài sản thành công.", "success");
+          reset(); // Reset the form fields
+          setValueEditor(""); // Reset the editor value
+          setTitleImageURL(null); // Reset the title image URL
+          setListOfImageURLs([]); // Reset the list of image URLs
         } catch (error) {
           console.log(error);
           handleShowNotification(
@@ -214,7 +220,6 @@ const Post = () => {
     });
     setShowSpinner(false);
   };
-
   return (
     <Transitions>
       <div className="w-full sm:w-4/5 mx-auto px-2">

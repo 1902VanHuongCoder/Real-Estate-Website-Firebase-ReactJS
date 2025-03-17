@@ -147,7 +147,7 @@ function App() {
               <Route index path="/" element={<Home />}></Route>
               <Route path="/real+estate/signup" element={<SignUp />}></Route>
               <Route path="/real+estate/signin" element={<Login />}></Route>
-              <Route path="/details" element={<Details />}></Route>
+              <Route path="/details/" element={<Details />}></Route>
               {session && <Route path="/chat" element={<ChatBox />}></Route>}
               <Route
                 path="/real+estate/your+profile"

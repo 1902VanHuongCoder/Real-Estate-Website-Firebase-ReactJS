@@ -14,7 +14,7 @@ import Transitions from "./Transition";
 
 // 🏷️ ListOfPosts component
 const ListOfPosts = () => {
-  const { postsWasFiltered } = useContext(AppContext);
+  const { postsWasFiltered, setPostsWasFiltered } = useContext(AppContext);
 
   const [display] = useConfirmBox();
 
@@ -36,6 +36,11 @@ const ListOfPosts = () => {
   // 📝 Handle delete post
   const handleToDeletePost = async (element) => {
     display("Bạn có chắc chắn muốn xóa bài đăng này?", element, "posts");
+    const newPostsWasFiltered = postsWasFiltered.filter(
+      (i) => i.id !== element.id
+    );
+
+    setPostsWasFiltered(newPostsWasFiltered);
     window.scrollTo({
       top: 0,
       behavior: "smooth",

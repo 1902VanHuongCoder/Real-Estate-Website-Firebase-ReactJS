@@ -50,26 +50,32 @@ const ConfirmBox = () => {
         newImagesToDeleteList.push(i.imageURL)
       );
 
-      newImagesToDeleteList.push(showConfirmBox.dataToDelete.titleImageURL);
+      newImagesToDeleteList.push(
+        showConfirmBox.dataToDelete.titleImageURL.imageURL
+      );
+
+      console.log(newImagesToDeleteList);
 
       for (let i = 0; i < newImagesToDeleteList.length; i++) {
-        const desertRef = ref(storage, newImagesToDeleteList[i]);
-
         try {
-          deleteObject(desertRef)
-            .then(() => {
-              console.log("File was deleted successfully.");
-            })
-            .catch((error) => {
-              console.log("Deleting file failed.");
-            });
+          const desertRef = ref(storage, newImagesToDeleteList[i]);
+          await deleteObject(desertRef);
+          console.log("File was deleted successfully.");
         } catch (error) {
-          continue;
+          if (error.code === "storage/object-not-found") {
+            console.log("File not found, skipping deletion.");
+          } else {
+            console.log("Deleting file failed.", error);
+          }
         }
-        // Delete the file
       }
+
       try {
-        await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
+        if (showConfirmBox.dataToDelete.house) {
+          await deleteDoc(doc(db, "houses", showConfirmBox.dataToDelete.id));
+        } else {
+          await deleteDoc(doc(db, "lands", showConfirmBox.dataToDelete.id));
+        }
         handleShowNotification("Xóa bài đăng thành công.");
       } catch (e) {
         handleShowNotification("Xóa bài đăng thất bại do mạng không ổn định");
@@ -84,13 +90,16 @@ const ConfirmBox = () => {
           storage,
           `userImages/${showConfirmBox.dataToDelete.photoName}`
         );
-        deleteObject(desertRef)
-          .then(() => {
-            console.log("File was deleted successfully.");
-          })
-          .catch((error) => {
-            console.log("Deleting file failed.");
-          });
+        try {
+          await deleteObject(desertRef);
+          console.log("File was deleted successfully.");
+        } catch (error) {
+          if (error.code === "storage/object-not-found") {
+            console.log("File not found, skipping deletion.");
+          } else {
+            console.log("Deleting file failed.", error);
+          }
+        }
       }
 
       if (showConfirmBox.dataToDelete.backgroundImageName !== "") {
@@ -98,13 +107,16 @@ const ConfirmBox = () => {
           storage,
           `userImages/${showConfirmBox.dataToDelete.backgroundImageName}`
         );
-        deleteObject(desertRef)
-          .then(() => {
-            console.log("File was deleted successfully.");
-          })
-          .catch((error) => {
-            console.log("Deleting file failed.");
-          });
+        try {
+          await deleteObject(desertRef);
+          console.log("File was deleted successfully.");
+        } catch (error) {
+          if (error.code === "storage/object-not-found") {
+            console.log("File not found, skipping deletion.");
+          } else {
+            console.log("Deleting file failed.", error);
+          }
+        }
       }
 
       console.log(showConfirmBox.dataToDelete.id);

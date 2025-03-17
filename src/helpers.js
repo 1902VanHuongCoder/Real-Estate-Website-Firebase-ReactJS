@@ -19,7 +19,6 @@ import ChatBox from "./Components/ChatBox";
 import GeneralInfo from "./Components/GeneralInfo";
 import UpdatePost from "./Components/UpdatePost";
 import ListOfPosts from "./Components/Partials/ListOfPosts";
-import Test from "./Test";
 import StaffAccountsList from "./Components/Partials/StaffAccountList";
 import StaffPost from "./Components/StaffPost";
 import { Hero, MainContent } from "./Components/Middle";
@@ -49,7 +48,6 @@ export {
   GeneralInfo,
   UpdatePost,
   ListOfPosts,
-  Test,
   StaffAccountsList,
   StaffPost,
   Hero,

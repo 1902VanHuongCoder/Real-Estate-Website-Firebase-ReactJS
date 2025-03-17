@@ -30,6 +30,8 @@ const Profile = () => {
     }
   }, []);
 
+  console.log(session);
+
   return (
     <Transitions>
       <div className="w-full h-fit">
@@ -116,16 +118,16 @@ const Profile = () => {
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic">Ngày cập nhật: </span>
                 <span>
-                  {session && session.update_at !== ""
-                    ? session.update_at
+                  {session && session.updateAt !== ""
+                    ? session.update_At
                     : "Không xác định"}
                 </span>
               </p>
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic"> Ngày gia nhập: </span>
                 <span>
-                  {session && session.create_at !== ""
-                    ? session.create_at
+                  {session && session.createAt !== ""
+                    ? session.createAt
                     : "Không xác định"}
                 </span>
               </p>

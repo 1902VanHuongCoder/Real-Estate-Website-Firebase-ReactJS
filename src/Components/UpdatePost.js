@@ -137,20 +137,18 @@ const UpdatePost = () => {
     if (titleImageURL && titleImageURL !== state.titleImageURL) {
       // check user whether user has changed title image
       valuesThatNeedToUpdate.titleImageURL = titleImageURL;
-
-      const desertRef = ref(storage, state.titleImageURL.imageURL);
-
       try {
+        const desertRef = ref(storage, state.titleImageURL.imageURL);
+        deleteObject(desertRef);
       } catch (error) {
-        // Delete the file
-        deleteObject(desertRef)
-          .then(() => {
-            console.log("File was deleted successfully.");
-          })
-          .catch((error) => {
-            console.log("Deleting file is failed.");
-          });
+        if (error.code === "storage/object-not-found") {
+          console.log("File not found, skipping deletion.");
+        } else {
+          console.log("Deleting file failed.", error);
+        }
       }
+
+      // Delete the file
     }
 
     let postsRef;
