@@ -5,12 +5,13 @@
 /.pnp
 .pnp.js
 p
-pac 
+package-lock.json
 # testing
 /coverage
 
 # production
 /build
+firebase.js
 
 # misc
 .DS_Store

@@ -30,8 +30,6 @@ const Profile = () => {
     }
   }, []);
 
-  console.log(session);
-
   return (
     <Transitions>
       <div className="w-full h-fit">
