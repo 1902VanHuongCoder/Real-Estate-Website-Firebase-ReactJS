@@ -118,16 +118,16 @@ const Profile = () => {
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic">Ngày cập nhật: </span>
                 <span>
-                  {session && session.updateAt !== ""
-                    ? session.update_At
+                  {session && session.updatedAt !== ""
+                    ? session.updatedAt
                     : "Không xác định"}
                 </span>
               </p>
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic"> Ngày gia nhập: </span>
                 <span>
-                  {session && session.createAt !== ""
-                    ? session.createAt
+                  {session && session.createdAt !== ""
+                    ? session.createdAt
                     : "Không xác định"}
                 </span>
               </p>
